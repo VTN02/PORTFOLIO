@@ -111,16 +111,26 @@ function ProjectCard({ project, index }) {
         <div className="project-card__tech">
           {project.tech.map(t => <span key={t} className="tech-badge">{t}</span>)}
         </div>
-        <a
-          href={project.repo}
-          className="project-card__link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <FaGithub size={16} />
-          <span>View Repository</span>
-          <FaArrowRight size={13} />
-        </a>
+        <div className="project-card__actions" style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', flexWrap: 'wrap' }}>
+          {project.link && (
+            <a href={project.link} className="project-card__link" target="_blank" rel="noopener noreferrer">
+              <FaGlobe size={16} />
+              <span>Live Preview</span>
+            </a>
+          )}
+          
+          {project.repo && !project.locked ? (
+            <a href={project.repo} className="project-card__link" target="_blank" rel="noopener noreferrer">
+              <FaGithub size={16} />
+              <span>Source Code</span>
+            </a>
+          ) : project.locked ? (
+            <div className="project-card__link" style={{ opacity: 0.6, cursor: 'not-allowed', background: 'rgba(255,255,255,0.05)' }}>
+              <FaLock size={14} />
+              <span>Private Source</span>
+            </div>
+          ) : null}
+        </div>
       </div>
     </motion.article>
   );
