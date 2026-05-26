@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { FaGithub, FaArrowRight } from 'react-icons/fa6';
+import { FaGithub, FaArrowRight, FaGlobe, FaLock } from 'react-icons/fa6';
 import './Projects.css';
 
 const MAIN_PROJECTS = [
@@ -25,6 +25,18 @@ const MAIN_PROJECTS = [
     image: '/images/portfolio_web.png',
     repo: 'https://github.com/VTN02/VTN_PORTFOLIO',
   },
+];
+
+const WEB_PROJECTS = [
+  {
+    title: 'VCollab',
+    desc: 'A collaborative platform for teams. Features modern dashboard interfaces, interactive tools, and real-time synchronization.',
+    tech: ['React', 'Vite', 'Tailwind CSS'],
+    image: '/images/vcollab.png',
+    link: 'https://vcollab-beta.vercel.app/',
+    repo: 'https://github.com/VTN02/VCollab',
+    locked: false,
+  }
 ];
 
 const ML_PROJECTS = [
