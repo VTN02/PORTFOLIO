@@ -8,21 +8,21 @@ const MAIN_PROJECTS = [
     title: 'School Management System',
     desc:  'A web-based school management system for handling student records, attendance, classes, and grading. Built to streamline administrative tasks and improve parent-teacher communication.',
     tech:  ['HTML/CSS', 'JavaScript', 'Spring Boot', 'MySQL'],
-    video: '/videos/scl_mgt.mp4',
+    image: '/images/school_management.png',
     repo:  'https://github.com/VTN02/school_management_system',
   },
   {
     title: 'Campus Bike Rental Management System',
     desc:  'A comprehensive web-based platform for managing campus bike rentals. Features admin dashboard for inventory management, rental tracking, user management, and ride history.',
     tech:  ['HTML/CSS', 'JavaScript', 'Spring Boot', 'MongoDB'],
-    image: null,
+    image: '/images/bike_rental.png',
     repo:  'https://github.com/VTN02/bikerentalsystem',
   },
   {
     title: 'Personal Portfolio Website',
     desc:  'A modern, responsive portfolio website showcasing projects, skills, and learning journey. Features AI-themed design with neural network animations, interactive UI elements, and smooth transitions.',
     tech:  ['React', 'Framer Motion', 'Firebase', 'Vite'],
-    video: '/videos/VTN_Port.mp4',
+    image: '/images/portfolio_web.png',
     repo:  'https://github.com/VTN02/VTN_PORTFOLIO',
   },
 ];
@@ -72,6 +72,12 @@ function ProjectCard({ project, index }) {
             playsInline
             preload="metadata"
             className="project-card__video"
+          />
+        ) : project.image ? (
+          <img 
+            src={project.image} 
+            alt={project.title} 
+            className="project-card__image" 
           />
         ) : (
           <div className="project-card__placeholder">

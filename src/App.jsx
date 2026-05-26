@@ -11,6 +11,7 @@ import CV                from './components/CV';
 import Contact           from './components/Contact';
 import Footer            from './components/Footer';
 import WhatsAppFloat     from './components/WhatsAppFloat';
+import Chatbot           from './components/Chatbot';
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -46,6 +47,7 @@ export default function App() {
 
           <Footer />
           <WhatsAppFloat />
+          <Chatbot />
         </>
       )}
     </>
