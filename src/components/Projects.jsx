@@ -213,7 +213,6 @@ export default function Projects() {
         >
           <span className="section-label">Live Deployments</span>
           <h2 className="section-title">Web Development Projects</h2>
-          <p className="section-subtitle">Real-world client projects and modern web applications</p>
         </motion.div>
 
         {/* Web Development projects */}
