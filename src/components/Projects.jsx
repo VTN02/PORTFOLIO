@@ -6,40 +6,40 @@ import './Projects.css';
 const MAIN_PROJECTS = [
   {
     title: 'School Management System',
-    desc:  'A web-based school management system for handling student records, attendance, classes, and grading. Built to streamline administrative tasks and improve parent-teacher communication.',
-    tech:  ['HTML/CSS', 'JavaScript', 'Spring Boot', 'MySQL'],
+    desc: 'A web-based school management system for handling student records, attendance, classes, and grading. Built to streamline administrative tasks and improve parent-teacher communication.',
+    tech: ['HTML/CSS', 'JavaScript', 'Spring Boot', 'MySQL'],
     image: '/images/school_management.png',
-    repo:  'https://github.com/VTN02/school_management_system',
+    repo: 'https://github.com/VTN02/school_management_system',
   },
   {
     title: 'Campus Bike Rental Management System',
-    desc:  'A comprehensive web-based platform for managing campus bike rentals. Features admin dashboard for inventory management, rental tracking, user management, and ride history.',
-    tech:  ['HTML/CSS', 'JavaScript', 'Spring Boot', 'MongoDB'],
+    desc: 'A comprehensive web-based platform for managing campus bike rentals. Features admin dashboard for inventory management, rental tracking, user management, and ride history.',
+    tech: ['HTML/CSS', 'JavaScript', 'Spring Boot', 'MongoDB'],
     image: '/images/bike_rental.png',
-    repo:  'https://github.com/VTN02/bikerentalsystem',
+    repo: 'https://github.com/VTN02/bikerentalsystem',
   },
   {
     title: 'Personal Portfolio Website',
-    desc:  'A modern, responsive portfolio website showcasing projects, skills, and learning journey. Features AI-themed design with neural network animations, interactive UI elements, and smooth transitions.',
-    tech:  ['React', 'Framer Motion', 'Firebase', 'Vite'],
+    desc: 'A modern, responsive portfolio website showcasing projects, skills, and learning journey. Features AI-themed design with neural network animations, interactive UI elements, and smooth transitions.',
+    tech: ['React', 'Framer Motion', 'Firebase', 'Vite'],
     image: '/images/portfolio_web.png',
-    repo:  'https://github.com/VTN02/VTN_PORTFOLIO',
+    repo: 'https://github.com/VTN02/VTN_PORTFOLIO',
   },
 ];
 
 const ML_PROJECTS = [
-  { icon: '📧', title: 'Spam Mail Prediction',    desc: 'Email classification model to identify spam messages using Naive Bayes and NLP feature extraction.',         tech: ['Python','Scikit-learn','NLP'] },
-  { icon: '🩺', title: 'Diabetes Prediction',      desc: 'Predictive model to classify diabetes risk using logistic regression, decision trees, and ensemble methods.', tech: ['Python','Pandas','Scikit-learn'] },
-  { icon: '🪨', title: 'Rock vs Mine Prediction',  desc: 'Sonar signal classification using logistic regression for binary classification problems.',                  tech: ['Python','Scikit-learn','Signal Processing'] },
-  { icon: '🛒', title: 'BigMart Sales Prediction', desc: 'Sales forecasting model for retail data involving feature engineering and regression techniques.',            tech: ['Python','Pandas','Regression'] },
-  { icon: '💳', title: 'Loan Status Prediction',   desc: 'Loan approval prediction model involving data cleaning, missing value handling, and classification.',         tech: ['Python','Data Cleaning','Classification'] },
-  { icon: '🏠', title: 'House Price Prediction',   desc: 'Real estate price prediction using multiple regression exploring property attributes and market value.',      tech: ['Python','Regression','Feature Engineering'] },
-  { icon: '❤️', title: 'Heart Disease Prediction', desc: 'Medical prediction model to assess heart disease risk from patient health metrics using classification.',    tech: ['Python','Scikit-learn','Healthcare ML'] },
+  { icon: '📧', title: 'Spam Mail Prediction', desc: 'Email classification model to identify spam messages using Naive Bayes and NLP feature extraction.', tech: ['Python', 'Scikit-learn', 'NLP'] },
+  { icon: '🩺', title: 'Diabetes Prediction', desc: 'Predictive model to classify diabetes risk using logistic regression, decision trees, and ensemble methods.', tech: ['Python', 'Pandas', 'Scikit-learn'] },
+  { icon: '🪨', title: 'Rock vs Mine Prediction', desc: 'Sonar signal classification using logistic regression for binary classification problems.', tech: ['Python', 'Scikit-learn', 'Signal Processing'] },
+  { icon: '🛒', title: 'BigMart Sales Prediction', desc: 'Sales forecasting model for retail data involving feature engineering and regression techniques.', tech: ['Python', 'Pandas', 'Regression'] },
+  { icon: '💳', title: 'Loan Status Prediction', desc: 'Loan approval prediction model involving data cleaning, missing value handling, and classification.', tech: ['Python', 'Data Cleaning', 'Classification'] },
+  { icon: '🏠', title: 'House Price Prediction', desc: 'Real estate price prediction using multiple regression exploring property attributes and market value.', tech: ['Python', 'Regression', 'Feature Engineering'] },
+  { icon: '❤️', title: 'Heart Disease Prediction', desc: 'Medical prediction model to assess heart disease risk from patient health metrics using classification.', tech: ['Python', 'Scikit-learn', 'Healthcare ML'] },
 ];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
-  show:   { opacity: 1, y: 0,  transition: { duration: 0.6, ease: [0.4,0,0.2,1] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] } },
 };
 
 function ProjectCard({ project, index }) {
@@ -57,7 +57,7 @@ function ProjectCard({ project, index }) {
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.55, delay: index * 0.12, ease: [0.4,0,0.2,1] }}
+      transition={{ duration: 0.55, delay: index * 0.12, ease: [0.4, 0, 0.2, 1] }}
       whileHover={{ y: -8 }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -74,10 +74,10 @@ function ProjectCard({ project, index }) {
             className="project-card__video"
           />
         ) : project.image ? (
-          <img 
-            src={project.image} 
-            alt={project.title} 
-            className="project-card__image" 
+          <img
+            src={project.image}
+            alt={project.title}
+            className="project-card__image"
           />
         ) : (
           <div className="project-card__placeholder">
