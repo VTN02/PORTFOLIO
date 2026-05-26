@@ -34,7 +34,6 @@ const WEB_PROJECTS = [
     tech: ['React', 'Vite', 'Tailwind CSS'],
     image: '/images/vcollab.png',
     link: 'https://vcollab-beta.vercel.app/',
-    repo: 'https://github.com/VTN02/VCollab',
     locked: false,
   }
 ];
