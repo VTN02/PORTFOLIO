@@ -204,6 +204,24 @@ export default function Projects() {
           {MAIN_PROJECTS.map((p, i) => <ProjectCard key={p.title} project={p} index={i} />)}
         </div>
 
+        <motion.div
+          className="section-header"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.3 }}
+          style={{ marginTop: '6rem' }}
+        >
+          <span className="section-label">Live Deployments</span>
+          <h2 className="section-title">Web Development Projects</h2>
+          <p className="section-subtitle">Real-world client projects and modern web applications</p>
+        </motion.div>
+
+        {/* Web Development projects */}
+        <div className="projects__grid">
+          {WEB_PROJECTS.map((p, i) => <ProjectCard key={p.title} project={p} index={i} />)}
+        </div>
+
         {/* ML Practice section */}
         <motion.div
           className="ml-section"
