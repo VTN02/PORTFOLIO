@@ -66,9 +66,9 @@ export default function Chatbot() {
     const recognition = new SpeechRecognition();
     recognitionRef.current = recognition;
     
-    // Set to continuous so it waits until the user is completely done
-    recognition.continuous = true; 
-    recognition.interimResults = true;
+    // Wait until the user finishes speaking before outputting text
+    recognition.continuous = false; 
+    recognition.interimResults = false;
     recognition.lang = 'en-US';
 
     // Store the text that was already in the input box
@@ -77,18 +77,9 @@ export default function Chatbot() {
     recognition.onstart = () => setIsListening(true);
     
     recognition.onresult = (event) => {
-      let interimTranscript = '';
-      
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          finalTranscriptRef.current += event.results[i][0].transcript;
-        } else {
-          // Overwrite instead of concatenate to fix Android repeating bugs
-          interimTranscript = event.results[i][0].transcript;
-        }
-      }
-      
-      setInput(finalTranscriptRef.current + interimTranscript);
+      // Because interimResults is false, it will only fire once with the perfectly clean, final sentence.
+      const finalTranscript = event.results[0][0].transcript;
+      setInput(finalTranscriptRef.current + finalTranscript);
     };
 
     recognition.onerror = (event) => {
@@ -267,7 +258,27 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
                   )}
                   <div className={`chat-bubble ${msg.role}`}>
                     {msg.role === 'model' ? (
-                      <ReactMarkdown>{msg.text}</ReactMarkdown>
+                      <ReactMarkdown
+                        components={{
+                          a: ({ node, ...props }) => {
+                            const handleClick = (e) => {
+                              setIsOpen(false);
+                              if (props.href && props.href.startsWith('#')) {
+                                e.preventDefault();
+                                setTimeout(() => {
+                                  const element = document.querySelector(props.href);
+                                  if (element) {
+                                    element.scrollIntoView({ behavior: 'smooth' });
+                                  }
+                                }, 300); // wait for modal closing animation
+                              }
+                            };
+                            return <a {...props} onClick={handleClick} />;
+                          }
+                        }}
+                      >
+                        {msg.text}
+                      </ReactMarkdown>
                     ) : (
                       msg.text
                     )}
