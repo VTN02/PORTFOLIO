@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaRobot, FaTimes, FaPaperPlane } from 'react-icons/fa';
+import { FaRobot, FaTimes, FaPaperPlane, FaMicrophone } from 'react-icons/fa';
 import ReactMarkdown from 'react-markdown';
 import './Chatbot.css';
 
@@ -20,6 +20,7 @@ export default function Chatbot() {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef(null);
   const chatbotRef = useRef(null);
 
@@ -46,6 +47,38 @@ export default function Chatbot() {
   useEffect(() => {
     if (isOpen) scrollToBottom();
   }, [messages, isOpen, isLoading]);
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Your browser does not support voice input.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = () => setIsListening(true);
+    
+    recognition.onresult = (event) => {
+      const current = event.resultIndex;
+      const transcript = event.results[current][0].transcript;
+      setInput(transcript);
+    };
+
+    recognition.onerror = (event) => {
+      console.error("Speech recognition error", event.error);
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
+  };
 
   const sendMessage = async (userMessage) => {
     if (!userMessage.trim() || isLoading) return;
@@ -81,9 +114,9 @@ Here is ALL the information about YOU:
 Technical Skills:
 - Web Dev: HTML/CSS, JavaScript, React, Tailwind CSS, Spring Boot
 - Programming Languages: Python, Java, JavaScript, C, SQL
-- AI/ML & Data Science: Scikit-learn, Pandas, NumPy, Matplotlib, Jupyter
+- AI/ML & Data Science: Scikit-learn, Pandas, NumPy, Matplotlib, Jupyter, n8n
 - Currently Learning: Deep Learning, TensorFlow, PyTorch, Computer Vision
-- AI Tools Explored: ChatGPT, Claude, Gemini, Midjourney, DALL-E, GitHub Copilot, Cursor, Google Colab.
+- AI Tools Explored: ChatGPT, Claude, Gemini, Midjourney, DALL-E, GitHub Copilot, Cursor, Google Colab, n8n (AI Automation).
 
 Main Projects:
 1. School Management System: Web-based system for handling student records, attendance, and grading. Built with Spring Boot, MySQL, HTML/JS. (Repo: https://github.com/VTN02/school_management_system)
@@ -104,7 +137,8 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
 2. You MUST ALWAYS use proper formatting including emojis, bullet points (\`*\` or \`-\`), and ordered lists (\`1.\`).
 3. You MUST use markdown code blocks (\`\`\` \`\`\`) to highlight contact info, important links, or technologies. For example, use inline code snippets \`like this\` for skills.
 4. Whenever you mention a section of the portfolio (like Technical Skills, Main Projects, About Me, Contact), you MUST make it a clickable markdown link pointing to that section on the page. Use these exact links: \`[Technical Skills](#cv)\`, \`[Main Projects](#projects)\`, \`[Contact Details](#contact)\`, \`[About Me](#about)\`.
-5. Keep responses structured, highly visual, and concise (under 4 sentences). Do NOT output giant walls of text.`
+5. Keep responses structured, highly visual, and concise (under 4 sentences). Do NOT output giant walls of text.
+6. STRICT RESTRICTION: You MUST ONLY answer questions related to your portfolio, professional experience, skills, education, and projects. If the user asks about ANYTHING else (e.g., general knowledge, coding help, politics, jokes, off-topic subjects), you MUST politely refuse to answer and redirect the conversation back to your portfolio.`
               }
             },
             contents: [
@@ -232,12 +266,21 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
             )}
 
             <form className="chatbot-input-area" onSubmit={handleSend}>
+              <button 
+                type="button" 
+                className={`mic-btn ${isListening ? 'listening' : ''}`}
+                onClick={startListening}
+                disabled={isLoading}
+                title="Use microphone"
+              >
+                <FaMicrophone size={16} />
+              </button>
               <input 
                 type="text" 
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask about my projects..."
-                disabled={isLoading}
+                placeholder={isListening ? "Listening..." : "Ask about my projects..."}
+                disabled={isLoading || isListening}
               />
               <button type="submit" disabled={!input.trim() || isLoading}>
                 <FaPaperPlane size={16} />

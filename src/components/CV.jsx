@@ -16,7 +16,7 @@ const SKILLS = [
   {
     category: 'AI/ML & Data Science',
     color: 'indigo',
-    items: ['Scikit-learn', 'Pandas', 'NumPy', 'Matplotlib', 'Jupyter'],
+    items: ['Scikit-learn', 'Pandas', 'NumPy', 'Matplotlib', 'Jupyter', 'n8n'],
   },
   {
     category: 'Currently Learning',
@@ -30,6 +30,7 @@ const AI_TOOLS = [
   { icon: '🎨', title: 'Image Generation',    desc: 'Midjourney, DALL-E, Stable Diffusion to understand generative AI and computer vision.' },
   { icon: '💻', title: 'Code Assistants',     desc: 'GitHub Copilot, Cursor for learning best coding practices and rapid prototyping.' },
   { icon: '📊', title: 'Data & Analytics',    desc: 'Google Colab, Jupyter notebooks with AI-powered insights and automation.' },
+  { icon: '⚙️', title: 'AI Automation',       desc: 'n8n for building AI-driven workflows and intelligent automation pipelines.' },
 ];
 
 const fadeUp = {
