@@ -83,7 +83,8 @@ export default function Chatbot() {
         if (event.results[i].isFinal) {
           finalTranscriptRef.current += event.results[i][0].transcript;
         } else {
-          interimTranscript += event.results[i][0].transcript;
+          // Overwrite instead of concatenate to fix Android repeating bugs
+          interimTranscript = event.results[i][0].transcript;
         }
       }
       
