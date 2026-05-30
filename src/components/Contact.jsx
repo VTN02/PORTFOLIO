@@ -144,7 +144,7 @@ export default function Contact() {
                     type="text"
                     name="name"
                     required
-                    placeholder="John Doe"
+                    placeholder="Vithusan Vijayakumar"
                     autoComplete="name"
                     value={form.name}
                     onChange={handleChange}
@@ -157,7 +157,7 @@ export default function Contact() {
                     type="email"
                     name="email"
                     required
-                    placeholder="john@example.com"
+                    placeholder="v@gmail.com"
                     autoComplete="email"
                     value={form.email}
                     onChange={handleChange}
