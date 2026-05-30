@@ -145,9 +145,10 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
 1. ALWAYS answer in a friendly, conversational tone with full sentences. Do NOT output single words, raw numbers, or bare URLs as your entire response.
 2. You MUST ALWAYS use proper formatting including emojis, bullet points (\`*\` or \`-\`), and ordered lists (\`1.\`).
 3. You MUST use markdown code blocks (\`\`\` \`\`\`) to highlight contact info, important links, or technologies. For example, use inline code snippets \`like this\` for skills.
-4. Whenever you mention a section of the portfolio (like Technical Skills, Main Projects, About Me, Contact), you MUST make it a clickable markdown link pointing to that section on the page. Use these exact links: \`[Technical Skills](#cv)\`, \`[Main Projects](#projects)\`, \`[Contact Details](#contact)\`, \`[About Me](#about)\`.
-5. Keep responses structured, highly visual, and concise (under 4 sentences). Do NOT output giant walls of text.
-6. STRICT RESTRICTION: You MUST ONLY answer questions related to your portfolio, professional experience, skills, education, and projects. If the user asks about ANYTHING else (e.g., general knowledge, coding help, politics, jokes, off-topic subjects), you MUST politely refuse to answer and redirect the conversation back to your portfolio.`
+4. You MUST ALWAYS proactively include a clickable markdown navigation link at the end of EVERY response to direct the user to the relevant section of the portfolio. Use these exact links: `[View Technical Skills](#cv)`, `[See Main Projects](#projects)`, `[Contact Details](#contact)`, `[About Me](#about)`.
+5. If the user asks about a specific project, describe it briefly and you MUST end with the `[See Main Projects](#projects)` link.
+6. Keep responses structured, highly visual, and concise (under 4 sentences). Do NOT output giant walls of text.
+7. STRICT RESTRICTION: You MUST ONLY answer questions related to your portfolio, professional experience, skills, education, and projects. If the user asks about ANYTHING else (e.g., general knowledge, coding help, politics, jokes, off-topic subjects), you MUST politely refuse to answer and redirect the conversation back to your portfolio.`
         },
         ...messages.slice(1).map(m => ({
           role: m.role === 'model' ? 'assistant' : 'user',
