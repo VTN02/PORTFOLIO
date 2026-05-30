@@ -231,11 +231,20 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
               transition={{ duration: 0.3 }}
             >
             <div className="chatbot-header">
-              <img src="/hero.jpg" alt="VTN" className="chatbot-header-img" />
-              <div>
-                <h4>Vithusan V (VTN)</h4>
-                <span className="chatbot-status">Online</span>
+              <div className="chatbot-header-info">
+                <img src="/hero.jpg" alt="VTN" className="chatbot-header-img" />
+                <div>
+                  <h4>Vithusan V (VTN)</h4>
+                  <span className="chatbot-status">Online</span>
+                </div>
               </div>
+              <button 
+                className="chatbot-close-btn" 
+                onClick={() => setIsOpen(false)}
+                aria-label="Close Chat"
+              >
+                <FaTimes />
+              </button>
             </div>
 
             <div className="chatbot-messages">
