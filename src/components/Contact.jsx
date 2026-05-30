@@ -62,7 +62,7 @@ export default function Contact() {
 
       // 2. Trigger n8n Automation Webhook
       try {
-        await fetch('https://vtnv.app.n8n.cloud/webhook-test/Contact%20form', {
+        await fetch('https://vtnv.app.n8n.cloud/webhook/Contact%20form', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
