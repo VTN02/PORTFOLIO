@@ -335,3 +335,12 @@
     width: calc(100vw - 2rem);
   }
 }
+
+.chatbot-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1001; /* Behind the chatbot-window but above everything else */
+}

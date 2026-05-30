@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import './CV.css';
 
@@ -49,6 +49,70 @@ const badgePop = {
 };
 
 export default function CV() {
+  const carouselRef = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+
+    let animationId;
+    let isDragging = false;
+    let startX;
+    let scrollLeft;
+
+    const handleMouseDown = (e) => {
+      isDragging = true;
+      setIsPaused(true);
+      startX = e.pageX - el.offsetLeft;
+      scrollLeft = el.scrollLeft;
+    };
+
+    const handleMouseLeave = () => {
+      isDragging = false;
+      setIsPaused(false);
+    };
+
+    const handleMouseUp = () => {
+      isDragging = false;
+      setIsPaused(false);
+    };
+
+    const handleMouseMove = (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const x = e.pageX - el.offsetLeft;
+      const walk = (x - startX) * 2;
+      el.scrollLeft = scrollLeft - walk;
+    };
+
+    el.addEventListener('mousedown', handleMouseDown);
+    el.addEventListener('mouseleave', handleMouseLeave);
+    el.addEventListener('mouseup', handleMouseUp);
+    el.addEventListener('mousemove', handleMouseMove);
+
+    const scroll = () => {
+      if (!isPaused && !isDragging) {
+        el.scrollLeft += 1;
+        // Reset to start for infinite loop when reaching half width
+        if (el.scrollLeft >= el.scrollWidth / 2) {
+          el.scrollLeft = 0;
+        }
+      }
+      animationId = requestAnimationFrame(scroll);
+    };
+
+    animationId = requestAnimationFrame(scroll);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      el.removeEventListener('mousedown', handleMouseDown);
+      el.removeEventListener('mouseleave', handleMouseLeave);
+      el.removeEventListener('mouseup', handleMouseUp);
+      el.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [isPaused]);
+
   return (
     <section id="cv" className="cv-section">
       <div className="container">
@@ -200,10 +264,17 @@ export default function CV() {
               <p className="cv__tools-intro">
                 Actively exploring cutting-edge AI tools to understand their capabilities and applications:
               </p>
-              <div className="cv__tools-grid">
-                {AI_TOOLS.map(({ icon, title, desc }) => (
+              <div 
+                className="cv__tools-grid"
+                ref={carouselRef}
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+                onTouchStart={() => setIsPaused(true)}
+                onTouchEnd={() => setIsPaused(false)}
+              >
+                {[...AI_TOOLS, ...AI_TOOLS].map(({ icon, title, desc }, idx) => (
                   <motion.div
-                    key={title}
+                    key={`${title}-${idx}`}
                     className="cv__tool"
                     whileHover={{ y: -4, borderColor: 'rgba(99,102,241,0.4)' }}
                     transition={{ duration: 0.2 }}

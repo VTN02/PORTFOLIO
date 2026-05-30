@@ -23,20 +23,16 @@ export default function Chatbot() {
   const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef(null);
   const chatbotRef = useRef(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (isOpen && chatbotRef.current && !chatbotRef.current.contains(e.target)) {
-        if (!e.target.closest('.chatbot-toggle')) {
-          setIsOpen(false);
-        }
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('touchstart', handleClickOutside);
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
+      document.body.style.overflow = '';
     };
   }, [isOpen]);
 
@@ -48,7 +44,18 @@ export default function Chatbot() {
     if (isOpen) scrollToBottom();
   }, [messages, isOpen, isLoading]);
 
-  const startListening = () => {
+  const recognitionRef = useRef(null);
+
+  const toggleListening = () => {
+    if (isListening) {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      setIsListening(false);
+      setTimeout(() => inputRef.current?.focus(), 100);
+      return;
+    }
+
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       alert("Your browser does not support voice input.");
@@ -56,25 +63,39 @@ export default function Chatbot() {
     }
 
     const recognition = new SpeechRecognition();
-    recognition.continuous = false;
+    recognitionRef.current = recognition;
+    
+    // Set to continuous so it waits until the user is completely done
+    recognition.continuous = true; 
     recognition.interimResults = true;
     recognition.lang = 'en-US';
+
+    // Store the text that was already in the input box before they started speaking
+    const originalInput = input ? input + ' ' : '';
 
     recognition.onstart = () => setIsListening(true);
     
     recognition.onresult = (event) => {
-      const current = event.resultIndex;
-      const transcript = event.results[current][0].transcript;
-      setInput(transcript);
+      let currentSessionTranscript = '';
+      
+      // Rebuild the transcript for the current session from scratch every time
+      for (let i = 0; i < event.results.length; ++i) {
+        currentSessionTranscript += event.results[i][0].transcript;
+      }
+      
+      // Combine the original input with the newly spoken text
+      setInput(originalInput + currentSessionTranscript);
     };
 
     recognition.onerror = (event) => {
       console.error("Speech recognition error", event.error);
       setIsListening(false);
+      setTimeout(() => inputRef.current?.focus(), 100);
     };
 
     recognition.onend = () => {
       setIsListening(false);
+      setTimeout(() => inputRef.current?.focus(), 100);
     };
 
     recognition.start();
@@ -192,14 +213,23 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
 
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
-            ref={chatbotRef}
-            className="chatbot-window glass-card"
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 50, scale: 0.9 }}
-            transition={{ duration: 0.3 }}
-          >
+          <>
+            <motion.div
+              className="chatbot-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setIsOpen(false)}
+            />
+            <motion.div 
+              ref={chatbotRef}
+              className="chatbot-window glass-card"
+              initial={{ opacity: 0, y: 50, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 50, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+            >
             <div className="chatbot-header">
               <img src="/hero.jpg" alt="VTN" className="chatbot-header-img" />
               <div>
@@ -269,13 +299,14 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
               <button 
                 type="button" 
                 className={`mic-btn ${isListening ? 'listening' : ''}`}
-                onClick={startListening}
+                onClick={toggleListening}
                 disabled={isLoading}
                 title="Use microphone"
               >
                 <FaMicrophone size={16} />
               </button>
               <input 
+                ref={inputRef}
                 type="text" 
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -287,6 +318,7 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
               </button>
             </form>
           </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>

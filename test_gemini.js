@@ -1,4 +1,4 @@
-const API_KEY = 'AIzaSyBPEHevZn7m-QiRQF555QSo0VStrT3icAo';
+const API_KEY = 'YOUR_API_KEY_HERE'; // Do not hardcode your key here, it will be leaked to GitHub!
 
 async function test() {
   const response = await fetch(
