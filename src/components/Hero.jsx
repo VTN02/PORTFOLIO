@@ -8,22 +8,22 @@ const FULL_NAME = 'Vithusan Vijayakumar';
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 30 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.7, delay, ease: [0.4, 0, 0.2, 1] },
+  transition: { duration: 0.85, delay, ease: [0.16, 1, 0.3, 1] },
 });
 
 const SOCIAL = [
-  { icon: FaGithub,   href: 'https://github.com/VTN02',                    label: 'GitHub' },
+  { icon: FaGithub, href: 'https://github.com/VTN02', label: 'GitHub' },
   { icon: FaLinkedin, href: 'https://www.linkedin.com/in/vithusan-vijayakumar/', label: 'LinkedIn' },
-  { icon: FaEnvelope, href: 'mailto:vijayakumarvithusan2912@gmail.com',      label: 'Email' },
+  { icon: FaEnvelope, href: 'mailto:vijayakumarvithusan2912@gmail.com', label: 'Email' },
 ];
 
 export default function Hero() {
   const [typedName, setTypedName] = useState('');
-  const [portraitTilt, setTilt]   = useState({ x: 0, y: 0 });
-  const heroRef  = useRef(null);
+  const [portraitTilt, setTilt] = useState({ x: 0, y: 0 });
+  const heroRef = useRef(null);
   const targetRef = useRef({ x: 0, y: 0 });
   const currentRef = useRef({ x: 0, y: 0 });
-  const animRef   = useRef(null);
+  const animRef = useRef(null);
 
   /* Typing effect */
   useEffect(() => {
@@ -49,8 +49,8 @@ export default function Hero() {
       if (!hero) return;
       const rect = hero.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
-      const cy = rect.top  + rect.height / 2;
-      targetRef.current.x = ((e.clientX - cx) / (rect.width  / 2));
+      const cy = rect.top + rect.height / 2;
+      targetRef.current.x = ((e.clientX - cx) / (rect.width / 2));
       targetRef.current.y = ((e.clientY - cy) / (rect.height / 2));
     };
     const onLeave = () => { targetRef.current.x = 0; targetRef.current.y = 0; };
@@ -140,12 +140,12 @@ export default function Hero() {
           className="hero__visual"
           initial={{ opacity: 0, scale: 0.88 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
+          transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="portrait-wrap" style={portraitStyle}>
             <div className="portrait-ring portrait-ring--1" aria-hidden="true" />
             <div className="portrait-ring portrait-ring--2" aria-hidden="true" />
-            <div className="portrait-glow"                  aria-hidden="true" />
+            <div className="portrait-glow" aria-hidden="true" />
             <img
               src="/hero.jpg"
               alt="Vithusan Vijayakumar portrait"

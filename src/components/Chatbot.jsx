@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaRobot, FaTimes, FaPaperPlane, FaMicrophone } from 'react-icons/fa';
 import ReactMarkdown from 'react-markdown';
+import heroLogo from '../assets/hero.png';
 import './Chatbot.css';
 
 const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
@@ -201,13 +202,15 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
 
   return (
     <>
-      <button 
+      <motion.button 
         className={`chatbot-toggle ${isOpen ? 'open' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle Chatbot"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.9 }}
       >
         {isOpen ? <FaTimes size={24} /> : <FaRobot size={28} />}
-      </button>
+      </motion.button>
 
       <AnimatePresence>
         {isOpen && (
@@ -226,11 +229,11 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
               initial={{ opacity: 0, y: 50, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 50, scale: 0.9 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             >
             <div className="chatbot-header">
               <div className="chatbot-header-info">
-                <img src="/hero.jpg" alt="VTN" className="chatbot-header-img" />
+                <img src="/hero.jpg" alt="VTN" className="chatbot-header-img" style={{ borderRadius: '50%', objectFit: 'cover' }} />
                 <div>
                   <h4>Vithusan V (VTN)</h4>
                   <span className="chatbot-status">Online</span>
@@ -247,16 +250,16 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
 
             <div className="chatbot-messages">
               {messages.map((msg, idx) => (
-                <motion.div 
-                  key={idx} 
-                  className={`chat-bubble-container ${msg.role}`}
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.25 }}
-                >
-                  {msg.role === 'model' && (
-                    <img src="/hero.jpg" alt="VTN" className="chat-avatar" />
-                  )}
+                  <motion.div 
+                    key={idx} 
+                    className={`chat-bubble-container ${msg.role}`}
+                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {msg.role === 'model' && (
+                      <img src="/hero.jpg" alt="VTN" className="chat-avatar" style={{ borderRadius: '50%', objectFit: 'cover' }} />
+                    )}
                   <div className={`chat-bubble ${msg.role}`}>
                     {msg.role === 'model' ? (
                       <ReactMarkdown
@@ -289,10 +292,11 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
               {isLoading && (
                 <motion.div 
                   className="chat-bubble-container model"
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 15, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <img src="/hero.jpg" alt="VTN" className="chat-avatar" />
+                  <img src="/hero.jpg" alt="VTN" className="chat-avatar" style={{ borderRadius: '50%', objectFit: 'cover' }} />
                   <div className="chat-bubble model typing">
                     <span>.</span><span>.</span><span>.</span>
                   </div>
@@ -306,18 +310,27 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
             {messages.length === 1 && !isLoading && (
               <motion.div 
                 className="chatbot-suggestions"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
+                variants={{
+                  hidden: {},
+                  show: { transition: { staggerChildren: 0.1, delayChildren: 0.4 } }
+                }}
+                initial="hidden"
+                animate="show"
               >
                 {SUGGESTIONS.map((sug, i) => (
-                  <button 
+                  <motion.button 
                     key={i} 
                     className="suggestion-btn glass-card"
                     onClick={() => sendMessage(sug)}
+                    variants={{
+                      hidden: { opacity: 0, y: 10 },
+                      show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
+                    }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
                     {sug}
-                  </button>
+                  </motion.button>
                 ))}
               </motion.div>
             )}

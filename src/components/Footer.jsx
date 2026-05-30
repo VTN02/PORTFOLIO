@@ -4,11 +4,11 @@ import { FaGithub, FaLinkedin, FaWhatsapp, FaInstagram, FaFacebookF, FaEnvelope 
 import './Footer.css';
 
 const SOCIALS = [
-  { icon: FaGithub,    href: 'https://github.com/VTN02',                              label: 'GitHub' },
-  { icon: FaLinkedin,  href: 'https://www.linkedin.com/in/vithusan-vijayakumar/',      label: 'LinkedIn' },
-  { icon: FaWhatsapp,  href: 'https://wa.me/94774534056',                             label: 'WhatsApp' },
-  { icon: FaInstagram, href: 'https://www.instagram.com/vithusan_2v/',                label: 'Instagram' },
-  { icon: FaFacebookF, href: 'https://web.facebook.com/vithusan.vijayakumar.2025',    label: 'Facebook' },
+  { icon: FaGithub, href: 'https://github.com/VTN02', label: 'GitHub' },
+  { icon: FaLinkedin, href: 'https://www.linkedin.com/in/vithusan-vijayakumar/', label: 'LinkedIn' },
+  { icon: FaWhatsapp, href: 'https://wa.me/94774534056', label: 'WhatsApp' },
+  { icon: FaInstagram, href: 'https://www.instagram.com/vithusan_2v/', label: 'Instagram' },
+  { icon: FaFacebookF, href: 'https://web.facebook.com/vithusan.vijayakumar.2025', label: 'Facebook' },
 ];
 
 const NAV_LINKS = [
@@ -22,7 +22,7 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer__container">
-        
+
         {/* Top Section */}
         <div className="footer__top">
           <div className="footer__brand">
@@ -36,7 +36,7 @@ export default function Footer() {
               <FaEnvelope /> vijayakumarvithusan2912@gmail.com
             </a>
           </div>
-          
+
           <div className="footer__links-group">
             <h4 className="footer__heading">Quick Links</h4>
             <ul className="footer__nav">

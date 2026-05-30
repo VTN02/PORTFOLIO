@@ -71,13 +71,59 @@
 .cv__semester { color: var(--text-secondary); font-size: 0.875rem; }
 
 .cv__edu-list {
-  padding-left: 1.25rem;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.8;
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1.25rem;
+  position: relative;
+}
+
+/* Vertical connecting line */
+.cv__edu-list::before {
+  content: '';
+  position: absolute;
+  left: 0.375rem; /* Centers exactly with the dots */
+  top: 0.75rem;
+  bottom: 0.75rem;
+  width: 2px;
+  background: var(--border);
+  z-index: 0;
+}
+
+.cv__edu-list li {
+  position: relative;
+  z-index: 1;
+  padding-left: 1.75rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.cv__edu-list li:hover {
+  transform: translateX(4px);
+  color: var(--text-primary);
+}
+
+.cv__edu-list li::before {
+  content: '';
+  position: absolute;
+  left: 0.25rem;
+  top: 0.6rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  transition: transform 0.2s ease, background 0.2s ease;
+  z-index: 2;
+}
+
+.cv__edu-list li:hover::before {
+  background: var(--accent-3);
+  transform: scale(1.2);
 }
 
 /* Skills */

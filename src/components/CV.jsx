@@ -1,27 +1,59 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { 
+  SiJavascript, SiReact, SiTailwindcss, SiSpringboot,
+  SiPython, SiC, SiScikitlearn, SiPandas, SiNumpy, 
+  SiJupyter, SiN8N, SiTensorflow, SiPytorch
+} from 'react-icons/si';
+import {
+  FaHtml5, FaJava, FaDatabase, FaChartLine, FaBrain, FaEye
+} from 'react-icons/fa6';
 import './CV.css';
 
 const SKILLS = [
   {
     category: 'Web Development',
     color: 'indigo',
-    items: ['HTML/CSS', 'JavaScript', 'React', 'Tailwind CSS', 'Spring Boot'],
+    items: [
+      { name: 'HTML/CSS', icon: FaHtml5 },
+      { name: 'JavaScript', icon: SiJavascript },
+      { name: 'React', icon: SiReact },
+      { name: 'Tailwind CSS', icon: SiTailwindcss },
+      { name: 'Spring Boot', icon: SiSpringboot },
+    ],
   },
   {
     category: 'Programming Languages',
     color: 'indigo',
-    items: ['Python', 'Java', 'JavaScript', 'C', 'SQL'],
+    items: [
+      { name: 'Python', icon: SiPython },
+      { name: 'Java', icon: FaJava },
+      { name: 'JavaScript', icon: SiJavascript },
+      { name: 'C', icon: SiC },
+      { name: 'SQL', icon: FaDatabase },
+    ],
   },
   {
     category: 'AI/ML & Data Science',
     color: 'indigo',
-    items: ['Scikit-learn', 'Pandas', 'NumPy', 'Matplotlib', 'Jupyter', 'n8n'],
+    items: [
+      { name: 'Scikit-learn', icon: SiScikitlearn },
+      { name: 'Pandas', icon: SiPandas },
+      { name: 'NumPy', icon: SiNumpy },
+      { name: 'Matplotlib', icon: FaChartLine },
+      { name: 'Jupyter', icon: SiJupyter },
+      { name: 'n8n', icon: SiN8N },
+    ],
   },
   {
     category: 'Currently Learning',
     color: 'violet',
-    items: ['Deep Learning', 'TensorFlow', 'PyTorch', 'Computer Vision'],
+    items: [
+      { name: 'Deep Learning', icon: FaBrain },
+      { name: 'TensorFlow', icon: SiTensorflow },
+      { name: 'PyTorch', icon: SiPytorch },
+      { name: 'Computer Vision', icon: FaEye },
+    ],
   },
 ];
 
@@ -170,12 +202,33 @@ export default function CV() {
                   <span className="cv__semester">2nd Year, 4th Semester</span>
                 </div>
               </div>
-              <ul className="cv__edu-list">
-                <li>Focusing on machine learning fundamentals, algorithms, and data structures</li>
-                <li>Completed AI/ML Engineer Stage 1 certification program</li>
-                <li>Active participant in coding competitions and tech workshops</li>
-                <li>Building practical projects to apply theoretical knowledge</li>
-              </ul>
+              <motion.ul 
+                className="cv__edu-list"
+                variants={{
+                  hidden: {},
+                  show: { transition: { staggerChildren: 0.3, delayChildren: 0.3 } }
+                }}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.5 }}
+              >
+                {[
+                  "Focusing on machine learning fundamentals, algorithms, and data structures",
+                  "Completed AI/ML Engineer Stage 1 certification program",
+                  "Active participant in coding competitions and tech workshops",
+                  "Building practical projects to apply theoretical knowledge"
+                ].map((text, idx) => (
+                  <motion.li 
+                    key={idx}
+                    variants={{
+                      hidden: { opacity: 0.2, x: -10, filter: 'brightness(0.5)' },
+                      show:   { opacity: 1, x: 0, filter: 'brightness(1)', transition: { duration: 0.4 } }
+                    }}
+                  >
+                    {text}
+                  </motion.li>
+                ))}
+              </motion.ul>
             </div>
           </motion.div>
 
@@ -202,11 +255,13 @@ export default function CV() {
                   <div className="cv__skill-badges">
                     {items.map(item => (
                       <motion.span
-                        key={item}
+                        key={item.name}
                         className={`tech-badge tech-badge--${color}`}
                         variants={badgePop}
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
                       >
-                        {item}
+                        <item.icon size={14} />
+                        {item.name}
                       </motion.span>
                     ))}
                   </div>

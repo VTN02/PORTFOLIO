@@ -3,17 +3,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import './Navbar.css';
 
 const NAV_LINKS = [
-  { label: 'Home',     href: '#home' },
-  { label: 'About',    href: '#about' },
+  { label: 'Home', href: '#home' },
+  { label: 'About', href: '#about' },
   { label: 'Projects', href: '#projects' },
-  { label: 'CV',       href: '#cv' },
-  { label: 'Contact',  href: '#contact' },
+  { label: 'CV', href: '#cv' },
+  { label: 'Contact', href: '#contact' },
 ];
 
 export default function Navbar() {
-  const [scrolled, setScrolled]     = useState(false);
-  const [menuOpen, setMenuOpen]     = useState(false);
-  const [activeSection, setActive]  = useState('home');
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActive] = useState('home');
 
   useEffect(() => {
     const onScroll = () => {
@@ -126,7 +126,7 @@ export default function Navbar() {
                   >
                     <a
                       href={href}
-                      className={`drawer__link ${activeSection === href.replace('#','') ? 'drawer__link--active' : ''}`}
+                      className={`drawer__link ${activeSection === href.replace('#', '') ? 'drawer__link--active' : ''}`}
                       onClick={e => handleNavClick(e, href)}
                     >
                       {label}

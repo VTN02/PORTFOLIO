@@ -13,7 +13,17 @@ const CONTACT_METHODS = [
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.4,0,0.2,1] } },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+};
+
+const staggerContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.15, delayChildren: 0.2 } },
+};
+
+const itemPop = {
+  hidden: { opacity: 0, x: -20 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
 };
 
 async function getNextContactId() {
@@ -88,7 +98,13 @@ export default function Contact() {
               professionals and contribute to real-world projects.
             </p>
 
-            <div className="contact__methods">
+            <motion.div 
+              className="contact__methods"
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+            >
               {CONTACT_METHODS.map(({ icon: Icon, label, value, href }) => (
                 <motion.a
                   key={label}
@@ -96,8 +112,8 @@ export default function Contact() {
                   className="contact__method glass-card"
                   target={href.startsWith('mailto') ? undefined : '_blank'}
                   rel="noopener noreferrer"
+                  variants={itemPop}
                   whileHover={{ x: 4, borderColor: 'rgba(99,102,241,0.5)' }}
-                  transition={{ duration: 0.2 }}
                 >
                   <span className="contact__method-icon">
                     <Icon size={20} />
@@ -108,7 +124,7 @@ export default function Contact() {
                   </div>
                 </motion.a>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
 
           {/* Form */}
@@ -117,7 +133,7 @@ export default function Contact() {
             initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           >
             <form className="contact__form glass-card" onSubmit={handleSubmit} id="contactForm" noValidate>
               <div className="form-row">

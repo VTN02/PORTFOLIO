@@ -50,10 +50,20 @@ const ML_PROJECTS = [
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
 };
 
-function ProjectCard({ project, index }) {
+export const staggerContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } }
+};
+
+export const itemPop = {
+  hidden: { opacity: 0, y: 40 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+};
+
+function ProjectCard({ project }) {
   const videoRef = useRef(null);
   const [expanded, setExpanded] = useState(false);
 
@@ -65,10 +75,7 @@ function ProjectCard({ project, index }) {
   return (
     <motion.article
       className="project-card glass-card"
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.55, delay: index * 0.12, ease: [0.4, 0, 0.2, 1] }}
+      variants={itemPop}
       whileHover={{ y: -8 }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -136,7 +143,7 @@ function ProjectCard({ project, index }) {
   );
 }
 
-function MLCard({ project, index }) {
+function MLCard({ project }) {
   const [expanded, setExpanded] = useState(false);
   const [liked, setLiked] = useState(false);
   const [count, setCount] = useState(0);
@@ -149,10 +156,7 @@ function MLCard({ project, index }) {
   return (
     <motion.article
       className="ml-card glass-card"
-      initial={{ opacity: 0, scale: 0.92 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, amount: 0.1 }}
-      transition={{ duration: 0.45, delay: index * 0.07 }}
+      variants={itemPop}
       whileHover={{ y: -4, borderColor: 'rgba(99,102,241,0.5)' }}
     >
       <div className="ml-card__header">
@@ -209,9 +213,15 @@ export default function Projects() {
         </motion.div>
 
         {/* Main projects */}
-        <div className="projects__grid">
-          {MAIN_PROJECTS.map((p, i) => <ProjectCard key={p.title} project={p} index={i} />)}
-        </div>
+        <motion.div 
+          className="projects__grid"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.1 }}
+        >
+          {MAIN_PROJECTS.map((p) => <ProjectCard key={p.title} project={p} />)}
+        </motion.div>
 
         <motion.div
           className="section-header"
@@ -226,9 +236,15 @@ export default function Projects() {
         </motion.div>
 
         {/* Web Development projects */}
-        <div className="projects__grid">
-          {WEB_PROJECTS.map((p, i) => <ProjectCard key={p.title} project={p} index={i} />)}
-        </div>
+        <motion.div 
+          className="projects__grid"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.1 }}
+        >
+          {WEB_PROJECTS.map((p) => <ProjectCard key={p.title} project={p} />)}
+        </motion.div>
 
         {/* ML Practice section */}
         <motion.div
@@ -236,7 +252,7 @@ export default function Projects() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.1 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="ml-section__header">
             <h3 className="ml-section__title">
@@ -249,9 +265,15 @@ export default function Projects() {
             </p>
           </div>
 
-          <div className="ml-grid">
-            {ML_PROJECTS.map((p, i) => <MLCard key={p.title} project={p} index={i} />)}
-          </div>
+          <motion.div 
+            className="ml-grid"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.1 }}
+          >
+            {ML_PROJECTS.map((p) => <MLCard key={p.title} project={p} />)}
+          </motion.div>
         </motion.div>
       </div>
     </section>
