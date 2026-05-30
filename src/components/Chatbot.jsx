@@ -4,7 +4,7 @@ import { FaRobot, FaTimes, FaPaperPlane, FaMicrophone } from 'react-icons/fa';
 import ReactMarkdown from 'react-markdown';
 import './Chatbot.css';
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 
 const SUGGESTIONS = [
   "What are your technical skills?",
@@ -24,6 +24,7 @@ export default function Chatbot() {
   const messagesEndRef = useRef(null);
   const chatbotRef = useRef(null);
   const inputRef = useRef(null);
+  const finalTranscriptRef = useRef('');
 
   useEffect(() => {
     if (isOpen) {
@@ -70,21 +71,23 @@ export default function Chatbot() {
     recognition.interimResults = true;
     recognition.lang = 'en-US';
 
-    // Store the text that was already in the input box before they started speaking
-    const originalInput = input ? input + ' ' : '';
+    // Store the text that was already in the input box
+    finalTranscriptRef.current = input ? input + ' ' : '';
 
     recognition.onstart = () => setIsListening(true);
     
     recognition.onresult = (event) => {
-      let currentSessionTranscript = '';
+      let interimTranscript = '';
       
-      // Rebuild the transcript for the current session from scratch every time
-      for (let i = 0; i < event.results.length; ++i) {
-        currentSessionTranscript += event.results[i][0].transcript;
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscriptRef.current += event.results[i][0].transcript;
+        } else {
+          interimTranscript += event.results[i][0].transcript;
+        }
       }
       
-      // Combine the original input with the newly spoken text
-      setInput(originalInput + currentSessionTranscript);
+      setInput(finalTranscriptRef.current + interimTranscript);
     };
 
     recognition.onerror = (event) => {
@@ -108,17 +111,10 @@ export default function Chatbot() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${API_KEY}`,
+      const groqMessages = [
         {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            system_instruction: {
-              parts: { 
-                text: `You are Vithusan Vijayakumar (VTN). You are a software engineering undergraduate. Answer questions as yourself, using the first person ("I", "my", "me"). Be enthusiastic, polite, and professional.
+          role: 'system',
+          content: `You are Vithusan Vijayakumar (VTN). You are a software engineering undergraduate. Answer questions as yourself, using the first person ("I", "my", "me"). Be enthusiastic, polite, and professional.
 
 Here is ALL the information about YOU:
 - Name: Vithusan Vijayakumar (VTN)
@@ -160,18 +156,27 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
 4. Whenever you mention a section of the portfolio (like Technical Skills, Main Projects, About Me, Contact), you MUST make it a clickable markdown link pointing to that section on the page. Use these exact links: \`[Technical Skills](#cv)\`, \`[Main Projects](#projects)\`, \`[Contact Details](#contact)\`, \`[About Me](#about)\`.
 5. Keep responses structured, highly visual, and concise (under 4 sentences). Do NOT output giant walls of text.
 6. STRICT RESTRICTION: You MUST ONLY answer questions related to your portfolio, professional experience, skills, education, and projects. If the user asks about ANYTHING else (e.g., general knowledge, coding help, politics, jokes, off-topic subjects), you MUST politely refuse to answer and redirect the conversation back to your portfolio.`
-              }
-            },
-            contents: [
-              ...messages.slice(1).map(m => ({
-                role: m.role,
-                parts: [{ text: m.text }]
-              })),
-              { 
-                role: 'user', 
-                parts: [{ text: userMessage }] 
-              }
-            ]
+        },
+        ...messages.slice(1).map(m => ({
+          role: m.role === 'model' ? 'assistant' : 'user',
+          content: m.text
+        })),
+        { role: 'user', content: userMessage }
+      ];
+
+      const response = await fetch(
+        'https://api.groq.com/openai/v1/chat/completions',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`
+          },
+          body: JSON.stringify({
+            model: 'llama-3.1-8b-instant',
+            messages: groqMessages,
+            temperature: 0.7,
+            max_tokens: 500
           })
         }
       );
@@ -180,8 +185,8 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
       
       if (data.error) {
          setMessages((prev) => [...prev, { role: 'model', text: `Error: ${data.error.message}` }]);
-      } else if (data.candidates && data.candidates[0].content.parts[0].text) {
-         const reply = data.candidates[0].content.parts[0].text;
+      } else if (data.choices && data.choices[0].message.content) {
+         const reply = data.choices[0].message.content;
          setMessages((prev) => [...prev, { role: 'model', text: reply }]);
       } else {
          setMessages((prev) => [...prev, { role: 'model', text: "Sorry, I couldn't understand that." }]);
