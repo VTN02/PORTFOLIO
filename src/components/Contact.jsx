@@ -56,7 +56,28 @@ export default function Contact() {
         contactId: nextId,
         timestamp: serverTimestamp(),
       };
+      
+      // 1. Save to Firebase
       await setDoc(doc(collection(db, 'contacts'), docId), payload);
+
+      // 2. Trigger n8n Automation Webhook
+      try {
+        await fetch('https://vtnv.app.n8n.cloud/webhook-test/Contact%20form', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: form.name,
+            email: form.email,
+            subject: form.subject,
+            message: form.message,
+            contactId: nextId
+          }),
+        });
+      } catch (webhookErr) {
+        console.error("n8n webhook error:", webhookErr);
+        // We don't throw here so the user still sees a success message if Firebase worked
+      }
+
       setStatus('success');
       setForm({ name: '', email: '', subject: '', message: '' });
     } catch (err) {
