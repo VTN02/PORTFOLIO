@@ -168,21 +168,26 @@ export default function Hero() {
     };
 
     const ctx = gsap.context(() => {
-      gsap.to(playhead, {
-        frame: frameCount, // Animate up to 180
-        scale: 1.08,
-        ease: "none",
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: "top top",
-          end: "+=80%", // Pin for 0.8x the viewport height
-          scrub: 1.2,
-          pin: true,     // Pins the section until animation is complete
-          onLeave: () => {
-            document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
-          }
-        },
-        onUpdate: () => requestAnimationFrame(render),
+      let mm = gsap.matchMedia();
+
+      // Desktop behavior
+      mm.add("(min-width: 961px)", () => {
+        gsap.to(playhead, {
+          frame: frameCount, // Animate up to 180
+          scale: 1.08,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "+=80%", // Pin for 0.8x the viewport height
+            scrub: 1.2,
+            pin: true,     // Pins the section until animation is complete
+            onLeave: () => {
+              document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+            }
+          },
+          onUpdate: () => requestAnimationFrame(render),
+        });
       });
     }, heroRef);
 

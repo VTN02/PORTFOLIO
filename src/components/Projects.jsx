@@ -156,63 +156,44 @@ function ProjectCard({ project }) {
   );
 }
 
-function MLCard({ project }) {
+function MLCard({ project, isExpanded, onToggle }) {
   const cardRef = useRef(null);
-  const isInView = useInView(cardRef, { once: true, margin: "-50px" });
-  const [expanded, setExpanded] = useState(false);
-  const [liked, setLiked] = useState(false);
-  const [count, setCount] = useState(0);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
 
   useEffect(() => {
-    if (isInView) {
-      // Small delay for staggered effect
-      const timer = setTimeout(() => setExpanded(true), 200);
-      return () => clearTimeout(timer);
-    }
-  }, [isInView]);
-
-  const toggle = (e) => {
-    e.stopPropagation(); // Prevent card expansion when clicking like
-    setLiked(l => !l);
-    setCount(c => liked ? c - 1 : c + 1);
-  };
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <motion.article
       ref={cardRef}
-      className="ml-card glass-card"
+      className={`ml-card glass-card ${isExpanded ? 'ml-card--expanded' : ''}`}
       variants={itemPop}
       whileHover={{ y: -4, borderColor: 'rgba(99,102,241,0.5)' }}
     >
       <div 
         className="ml-card__header" 
-        style={{ cursor: 'pointer', paddingBottom: expanded ? '0.25rem' : '0' }}
-        onClick={() => setExpanded(!expanded)}
+        style={{ cursor: 'pointer', paddingBottom: isExpanded ? '0.25rem' : '0' }}
+        onClick={onToggle}
       >
         <h4 className="ml-card__title" style={{ flex: 1, paddingRight: '0.5rem' }}>
           <span aria-hidden="true">{project.icon}</span> {project.title}
         </h4>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <motion.div
-            animate={{ rotate: expanded ? 180 : 0 }}
+            animate={{ rotate: isExpanded ? 180 : 0 }}
             transition={{ duration: 0.3 }}
             style={{ color: 'var(--text-secondary)', display: 'flex' }}
           >
             <FaChevronDown size={14} />
           </motion.div>
-          <button
-            className={`like-btn ${liked ? 'like-btn--active' : ''}`}
-            onClick={toggle}
-            aria-label={liked ? 'Unlike' : 'Like'}
-          >
-            <span>{liked ? '♥' : '♡'}</span>
-            <span className="like-count">{count}</span>
-          </button>
         </div>
       </div>
       
       <AnimatePresence>
-        {expanded && (
+        {isExpanded && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -220,28 +201,48 @@ function MLCard({ project }) {
             transition={{ duration: 0.4, ease: "easeOut" }}
             style={{ overflow: 'hidden' }}
           >
-            <div style={{ paddingTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              <p 
-                className="ml-card__desc" 
-                style={{ 
-                  display: 'block', 
-                  WebkitLineClamp: 'unset', 
-                  overflow: 'visible',
-                  cursor: 'default'
-                }}
-              >
-                {project.desc}
-              </p>
-              <div className="ml-card__tech">
-                {project.tech.map(t => <span key={t} className="tech-badge">{t}</span>)}
-              </div>
-              <div
-                className="ml-card__github"
-                aria-label={`View ${project.title} on GitHub`}
-                style={{ alignSelf: 'flex-end', marginTop: '-0.5rem', opacity: 0.5, cursor: 'not-allowed' }}
-                title="Source code is currently unavailable"
-              >
-                <FaGithub size={18} />
+            <div style={{ paddingTop: '0.75rem', position: 'relative' }}>
+              
+              {/* Vertical line animation for mobile inside the card */}
+              {isMobile && (
+                <motion.div
+                  initial={{ height: 0 }}
+                  animate={{ height: 'calc(100% - 1.25rem)' }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  style={{
+                    position: 'absolute',
+                    left: '0.25rem',
+                    top: '0.75rem',
+                    width: '2px',
+                    background: 'linear-gradient(to bottom, var(--accent), transparent)',
+                    borderRadius: '2px'
+                  }}
+                />
+              )}
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', paddingLeft: isMobile ? '1.25rem' : '0' }}>
+                <p 
+                  className="ml-card__desc" 
+                  style={{ 
+                    display: 'block', 
+                    WebkitLineClamp: 'unset', 
+                    overflow: 'visible',
+                    cursor: 'default'
+                  }}
+                >
+                  {project.desc}
+                </p>
+                <div className="ml-card__tech">
+                  {project.tech.map(t => <span key={t} className="tech-badge">{t}</span>)}
+                </div>
+                <div
+                  className="ml-card__github"
+                  aria-label={`View ${project.title} on GitHub`}
+                  style={{ alignSelf: 'flex-end', marginTop: '-0.5rem', opacity: 0.5, cursor: 'not-allowed' }}
+                  title="Source code is currently unavailable"
+                >
+                  <FaGithub size={18} />
+                </div>
               </div>
             </div>
           </motion.div>
@@ -253,16 +254,18 @@ function MLCard({ project }) {
 
 export default function Projects() {
   const mlRef = useRef(null);
-  const isMlInView = useInView(mlRef, { once: true, margin: "-100px" });
-  const [isMlDescOpen, setIsMlDescOpen] = useState(false);
+  
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+  const [openMLIndex, setOpenMLIndex] = useState(null);
 
   useEffect(() => {
-    if (isMlInView) {
-      // Add a slight delay for better visual effect after scrolling
-      const timer = setTimeout(() => setIsMlDescOpen(true), 300);
-      return () => clearTimeout(timer);
-    }
-  }, [isMlInView]);
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <section id="projects">
@@ -322,40 +325,14 @@ export default function Projects() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="ml-section__header" ref={mlRef}>
-            <div 
-              style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }} 
-              onClick={() => setIsMlDescOpen(!isMlDescOpen)}
-              title={isMlDescOpen ? 'Click to collapse' : 'Click to expand'}
-            >
-              <h3 className="ml-section__title" style={{ marginBottom: 0 }}>
-                🔬 Machine Learning Practice Projects
-              </h3>
-              <motion.div
-                animate={{ rotate: isMlDescOpen ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
-                style={{ color: 'var(--accent)', display: 'flex', fontSize: '1.2rem' }}
-              >
-                <FaChevronDown />
-              </motion.div>
-            </div>
-            
-            <AnimatePresence>
-              {isMlDescOpen && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0, y: -10 }}
-                  animate={{ height: "auto", opacity: 1, y: 0 }}
-                  exit={{ height: 0, opacity: 0, y: -10 }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
-                  style={{ overflow: 'hidden' }}
-                >
-                  <p className="ml-section__desc" style={{ marginTop: '1rem' }}>
-                    Collection of prediction and classification projects built with Python, Pandas,
-                    Scikit-learn, and Jupyter. These hands-on projects help me master fundamental
-                    ML algorithms and data processing techniques.
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <h3 className="ml-section__title">
+              🔬 Machine Learning Practice Projects
+            </h3>
+            <p className="ml-section__desc">
+              Collection of prediction and classification projects built with Python, Pandas,
+              Scikit-learn, and Jupyter. These hands-on projects help me master fundamental
+              ML algorithms and data processing techniques.
+            </p>
           </div>
 
           <motion.div 
@@ -365,7 +342,16 @@ export default function Projects() {
             whileInView="show"
             viewport={{ once: true, amount: 0.1 }}
           >
-            {ML_PROJECTS.map((p) => <MLCard key={p.title} project={p} />)}
+            {ML_PROJECTS.map((p, i) => (
+              <MLCard 
+                key={p.title} 
+                project={p} 
+                isExpanded={!isMobile || openMLIndex === i}
+                onToggle={() => {
+                  if (isMobile) setOpenMLIndex(openMLIndex === i ? null : i);
+                }}
+              />
+            ))}
           </motion.div>
         </motion.div>
       </div>

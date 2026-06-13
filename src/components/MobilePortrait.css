@@ -1,0 +1,78 @@
+.mobile-portrait {
+  display: none;
+}
+
+@media (max-width: 960px) {
+  .mobile-portrait {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 1.5rem;
+    position: relative;
+    z-index: 1;
+    min-height: 100svh;
+    overflow: hidden;
+  }
+
+  .mobile-portrait::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -10%;
+    width: 70%;
+    height: 80%;
+    background: radial-gradient(ellipse at center,
+        rgba(99, 102, 241, 0.12) 0%,
+        rgba(139, 92, 246, 0.06) 40%,
+        transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .mobile-portrait__visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+
+  /* Ensure badges show nicely in the standalone component */
+  .mobile-portrait .hero__badge--br {
+    display: block; /* Overrides the display: none from Hero.css for mobile */
+    bottom: -6%;
+    right: 50%;
+    transform: translateX(50%);
+  }
+
+  .mobile-portrait .portrait-wrap {
+    width: 240px;
+    height: 240px;
+  }
+}
+
+@media (max-width: 600px) {
+  .mobile-portrait .portrait-wrap {
+    width: 200px;
+    height: 200px;
+  }
+
+  .mobile-portrait .hero__badge--tl {
+    top: -6%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .mobile-portrait .hero__badge--br {
+    bottom: -6%;
+    right: 50%;
+    transform: translateX(50%);
+  }
+}
+
+@media (max-width: 380px) {
+  .mobile-portrait .portrait-wrap {
+    width: 170px;
+    height: 170px;
+  }
+}

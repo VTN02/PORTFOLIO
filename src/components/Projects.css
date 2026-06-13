@@ -8,10 +8,10 @@
 
 .project-card {
   border-radius: var(--radius-lg);
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   cursor: default;
+  position: relative;
 }
 
 .project-card__media {
@@ -20,6 +20,8 @@
   width: 100%;
   overflow: hidden;
   background: var(--bg-secondary);
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
 }
 
 .project-card__video,
@@ -157,6 +159,52 @@
   position: relative;
   break-inside: avoid;
   margin-bottom: 1.25rem;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+/* ── Global Animated Border Feature ── */
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes border-spin-global {
+  to { --border-angle: 360deg; }
+}
+
+.project-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--border-angle),
+    transparent 0%,
+    transparent 60%,
+    var(--accent) 80%,
+    var(--accent-2) 100%
+  );
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Desktop: Hover or active state for any project card */
+@media (min-width: 769px) {
+  .project-card:hover::after,
+  .project-card:active::after,
+  .project-card:focus-within::after {
+    opacity: 1;
+    animation: border-spin-global 2s linear infinite;
+  }
 }
 
 .ml-card__header {
@@ -173,23 +221,7 @@
   line-height: 1.35;
 }
 
-.like-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  padding: 0.3rem 0.65rem;
-  cursor: pointer;
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-.like-btn:hover      { border-color: rgba(236,72,153,0.4); color: var(--accent-3); }
-.like-btn--active    { border-color: rgba(236,72,153,0.4); color: var(--accent-3); }
-.like-count          { font-family: var(--font-mono); font-size: 0.75rem; }
+
 
 .ml-card__desc {
   font-size: 0.875rem;

@@ -136,21 +136,7 @@ export default function About() {
           </motion.div>
         </div>
 
-        {/* Image at the end of About */}
-        <motion.div
-          className="about__image-wrap"
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          <div className="about__portrait-wrap">
-            <div className="about__portrait-ring about__portrait-ring--1" aria-hidden="true" />
-            <div className="about__portrait-ring about__portrait-ring--2" aria-hidden="true" />
-            <div className="about__portrait-glow" aria-hidden="true" />
-            <img src="/hero.jpg" alt="Vithusan Vijayakumar" className="about__portrait-img" />
-          </div>
-        </motion.div>
+
       </div>
     </section>
   );

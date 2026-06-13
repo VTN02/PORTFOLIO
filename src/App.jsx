@@ -13,6 +13,8 @@ import Footer            from './components/Footer';
 import WhatsAppFloat     from './components/WhatsAppFloat';
 import Chatbot           from './components/Chatbot';
 
+import MobilePortrait       from './components/MobilePortrait';
+
 export default function App() {
   const [loading, setLoading] = useState(true);
 
@@ -55,6 +57,7 @@ export default function App() {
       {/* Main content */}
       <main>
         <Hero />
+        <MobilePortrait />
         <About />
         <Projects />
         <CV />
