@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaEnvelope, FaArrowDown } from 'react-icons/fa6';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Hero.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const FULL_NAME = 'Vithusan Vijayakumar';
 
@@ -19,11 +23,18 @@ const SOCIAL = [
 
 export default function Hero() {
   const [typedName, setTypedName] = useState('');
+  const [typedTitle, setTypedTitle] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [loopNum, setLoopNum] = useState(0);
   const [portraitTilt, setTilt] = useState({ x: 0, y: 0 });
   const heroRef = useRef(null);
+  const canvasRef = useRef(null);
+  const framesRef = useRef([]);
   const targetRef = useRef({ x: 0, y: 0 });
   const currentRef = useRef({ x: 0, y: 0 });
   const animRef = useRef(null);
+
+  const frameCount = 180;
 
   /* Typing effect */
   useEffect(() => {
@@ -38,6 +49,35 @@ export default function Hero() {
     }, 700);
     return () => clearTimeout(timer);
   }, []);
+
+  /* Typing effect for Titles */
+  useEffect(() => {
+    const TITLES = ['AI/ML Student & Developer', 'Machine Learning Enthusiast', 'Creative Problem Solver'];
+    let timer;
+    const currentText = TITLES[loopNum % TITLES.length];
+
+    if (isDeleting) {
+      timer = setTimeout(() => {
+        setTypedTitle(currentText.substring(0, typedTitle.length - 1));
+      }, 50);
+    } else {
+      timer = setTimeout(() => {
+        setTypedTitle(currentText.substring(0, typedTitle.length + 1));
+      }, 100);
+    }
+
+    if (!isDeleting && typedTitle === currentText) {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        setIsDeleting(true);
+      }, 2000);
+    } else if (isDeleting && typedTitle === '') {
+      setIsDeleting(false);
+      setLoopNum((prev) => prev + 1);
+    }
+
+    return () => clearTimeout(timer);
+  }, [typedTitle, isDeleting, loopNum]);
 
   /* Parallax tilt */
   useEffect(() => {
@@ -74,6 +114,81 @@ export default function Hero() {
     };
   }, []);
 
+  /* Canvas Frame Animation */
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const context = canvas.getContext('2d', { alpha: true });
+
+    const playhead = { frame: 0, scale: 1 };
+
+    // Preload all 180 laptop frames
+    const loadedImages = [];
+    for (let i = 1; i <= frameCount; i++) {
+      const img = new Image();
+      if (i === 1) {
+        img.onload = () => {
+          if (Math.round(playhead.frame) === 0) {
+            canvas.width = img.naturalWidth || 800;
+            canvas.height = img.naturalHeight || 800;
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(img, 0, 0, canvas.width, canvas.height);
+          }
+        };
+      }
+      img.src = `/frames/ezgif-frame-${i.toString().padStart(3, '0')}.png`;
+      loadedImages.push(img);
+    }
+    framesRef.current = loadedImages;
+
+    const render = () => {
+      const currentFrame = Math.round(playhead.frame);
+      let imgToDraw = null;
+
+      // If at the very top (frame 0), draw the first scroll frame
+      if (currentFrame === 0) {
+        imgToDraw = framesRef.current[0];
+      } else {
+        // Otherwise draw the corresponding scroll frame (frame 1 -> index 0)
+        imgToDraw = framesRef.current[currentFrame - 1];
+      }
+
+      // Only draw if image is successfully loaded
+      if (imgToDraw && imgToDraw.complete && imgToDraw.naturalWidth > 0) {
+        if (canvas.width !== imgToDraw.naturalWidth) {
+          canvas.width = imgToDraw.naturalWidth;
+          canvas.height = imgToDraw.naturalHeight;
+        }
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(imgToDraw, 0, 0, canvas.width, canvas.height);
+      }
+
+      // Apply the subtle scale effect to the canvas
+      gsap.set(canvas, { scale: playhead.scale });
+    };
+
+    const ctx = gsap.context(() => {
+      gsap.to(playhead, {
+        frame: frameCount, // Animate up to 180
+        scale: 1.08,
+        ease: "none",
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: "top top",
+          end: "+=80%", // Pin for 0.8x the viewport height
+          scrub: 1.2,
+          pin: true,     // Pins the section until animation is complete
+          onLeave: () => {
+            document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+          }
+        },
+        onUpdate: () => requestAnimationFrame(render),
+      });
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
+
   const portraitStyle = {
     transform: `translate3d(${portraitTilt.x * 14}px, ${portraitTilt.y * 10}px, 0)
                 rotateX(${-portraitTilt.y * 6}deg)
@@ -97,7 +212,10 @@ export default function Hero() {
         {/* Left — text */}
         <div className="hero__text">
           <motion.div {...fadeUp(0.1)} className="hero__label">
-            <span className="section-label">AI/ML Student & Developer</span>
+            <span className="section-label">
+              {typedTitle || '\u00A0'}
+              <span className="hero__cursor" aria-hidden="true" style={{ marginLeft: 0 }}>|</span>
+            </span>
           </motion.div>
 
           <motion.h1 {...fadeUp(0.22)} className="hero__heading">
@@ -146,14 +264,13 @@ export default function Hero() {
             <div className="portrait-ring portrait-ring--1" aria-hidden="true" />
             <div className="portrait-ring portrait-ring--2" aria-hidden="true" />
             <div className="portrait-glow" aria-hidden="true" />
-            <img
-              src="/hero.jpg"
-              alt="Vithusan Vijayakumar portrait"
+            <canvas
+              ref={canvasRef}
               className="portrait-img"
-              onError={e => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
-              }}
+              aria-label="Vithusan Vijayakumar animated portrait"
+              onContextMenu={(e) => e.preventDefault()}
+              style={{ pointerEvents: 'none', userSelect: 'none', WebkitUserSelect: 'none' }}
+              draggable="false"
             />
             <div className="portrait-fallback" style={{ display: 'none' }}>VV</div>
           </div>

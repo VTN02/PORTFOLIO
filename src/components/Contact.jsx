@@ -114,7 +114,7 @@ export default function Contact() {
             <h3 className="contact__info-heading">Looking for Learning Opportunities</h3>
             <p className="contact__info-text">
               I&apos;m actively seeking internship opportunities, mentorship, and project
-              collaborations to gain practical experience in AI/ML. As a 2nd year student
+              collaborations to gain practical experience in AI/ML. As a 3rd year student
               passionate about artificial intelligence, I&apos;m eager to learn from experienced
               professionals and contribute to real-world projects.
             </p>

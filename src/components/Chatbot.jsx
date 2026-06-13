@@ -66,9 +66,9 @@ export default function Chatbot() {
 
     const recognition = new SpeechRecognition();
     recognitionRef.current = recognition;
-    
+
     // Wait until the user finishes speaking before outputting text
-    recognition.continuous = false; 
+    recognition.continuous = false;
     recognition.interimResults = false;
     recognition.lang = 'en-US';
 
@@ -76,7 +76,7 @@ export default function Chatbot() {
     finalTranscriptRef.current = input ? input + ' ' : '';
 
     recognition.onstart = () => setIsListening(true);
-    
+
     recognition.onresult = (event) => {
       // Because interimResults is false, it will only fire once with the perfectly clean, final sentence.
       const finalTranscript = event.results[0][0].transcript;
@@ -176,14 +176,14 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
       );
 
       const data = await response.json();
-      
+
       if (data.error) {
-         setMessages((prev) => [...prev, { role: 'model', text: `Error: ${data.error.message}` }]);
+        setMessages((prev) => [...prev, { role: 'model', text: `Error: ${data.error.message}` }]);
       } else if (data.choices && data.choices[0].message.content) {
-         const reply = data.choices[0].message.content;
-         setMessages((prev) => [...prev, { role: 'model', text: reply }]);
+        const reply = data.choices[0].message.content;
+        setMessages((prev) => [...prev, { role: 'model', text: reply }]);
       } else {
-         setMessages((prev) => [...prev, { role: 'model', text: "Sorry, I couldn't understand that." }]);
+        setMessages((prev) => [...prev, { role: 'model', text: "Sorry, I couldn't understand that." }]);
       }
     } catch (error) {
       setMessages((prev) => [...prev, { role: 'model', text: "Network error occurred." }]);
@@ -202,7 +202,7 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
 
   return (
     <>
-      <motion.button 
+      <motion.button
         className={`chatbot-toggle ${isOpen ? 'open' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle Chatbot"
@@ -223,7 +223,7 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
               transition={{ duration: 0.3 }}
               onClick={() => setIsOpen(false)}
             />
-            <motion.div 
+            <motion.div
               ref={chatbotRef}
               className="chatbot-window glass-card"
               initial={{ opacity: 0, y: 50, scale: 0.9 }}
@@ -231,27 +231,27 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
               exit={{ opacity: 0, y: 50, scale: 0.9 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             >
-            <div className="chatbot-header">
-              <div className="chatbot-header-info">
-                <img src="/hero.jpg" alt="VTN" className="chatbot-header-img" style={{ borderRadius: '50%', objectFit: 'cover' }} />
-                <div>
-                  <h4>Vithusan V (VTN)</h4>
-                  <span className="chatbot-status">Online</span>
+              <div className="chatbot-header">
+                <div className="chatbot-header-info">
+                  <img src="/hero.jpg" alt="VTN" className="chatbot-header-img" style={{ borderRadius: '50%', objectFit: 'cover' }} />
+                  <div>
+                    <h4>Vithusan V (VTN)</h4>
+                    <span className="chatbot-status">Online</span>
+                  </div>
                 </div>
+                <button
+                  className="chatbot-close-btn"
+                  onClick={() => setIsOpen(false)}
+                  aria-label="Close Chat"
+                >
+                  <FaTimes />
+                </button>
               </div>
-              <button 
-                className="chatbot-close-btn" 
-                onClick={() => setIsOpen(false)}
-                aria-label="Close Chat"
-              >
-                <FaTimes />
-              </button>
-            </div>
 
-            <div className="chatbot-messages">
-              {messages.map((msg, idx) => (
-                  <motion.div 
-                    key={idx} 
+              <div className="chatbot-messages">
+                {messages.map((msg, idx) => (
+                  <motion.div
+                    key={idx}
                     className={`chat-bubble-container ${msg.role}`}
                     initial={{ opacity: 0, y: 15, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -260,104 +260,104 @@ CRITICAL INSTRUCTIONS FOR YOUR RESPONSES:
                     {msg.role === 'model' && (
                       <img src="/hero.jpg" alt="VTN" className="chat-avatar" style={{ borderRadius: '50%', objectFit: 'cover' }} />
                     )}
-                  <div className={`chat-bubble ${msg.role}`}>
-                    {msg.role === 'model' ? (
-                      <ReactMarkdown
-                        components={{
-                          a: ({ node, ...props }) => {
-                            const handleClick = (e) => {
-                              setIsOpen(false);
-                              if (props.href && props.href.startsWith('#')) {
-                                e.preventDefault();
-                                setTimeout(() => {
-                                  const element = document.querySelector(props.href);
-                                  if (element) {
-                                    element.scrollIntoView({ behavior: 'smooth' });
-                                  }
-                                }, 300); // wait for modal closing animation
-                              }
-                            };
-                            return <a {...props} onClick={handleClick} />;
-                          }
-                        }}
-                      >
-                        {msg.text}
-                      </ReactMarkdown>
-                    ) : (
-                      msg.text
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-              {isLoading && (
-                <motion.div 
-                  className="chat-bubble-container model"
-                  initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    <div className={`chat-bubble ${msg.role}`}>
+                      {msg.role === 'model' ? (
+                        <ReactMarkdown
+                          components={{
+                            a: ({ node, ...props }) => {
+                              const handleClick = (e) => {
+                                setIsOpen(false);
+                                if (props.href && props.href.startsWith('#')) {
+                                  e.preventDefault();
+                                  setTimeout(() => {
+                                    const element = document.querySelector(props.href);
+                                    if (element) {
+                                      element.scrollIntoView({ behavior: 'smooth' });
+                                    }
+                                  }, 300); // wait for modal closing animation
+                                }
+                              };
+                              return <a {...props} onClick={handleClick} />;
+                            }
+                          }}
+                        >
+                          {msg.text}
+                        </ReactMarkdown>
+                      ) : (
+                        msg.text
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+                {isLoading && (
+                  <motion.div
+                    className="chat-bubble-container model"
+                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <img src="/hero.jpg" alt="VTN" className="chat-avatar" style={{ borderRadius: '50%', objectFit: 'cover' }} />
+                    <div className="chat-bubble model typing">
+                      <span>.</span><span>.</span><span>.</span>
+                    </div>
+                  </motion.div>
+                )}
+
+                <div ref={messagesEndRef} />
+              </div>
+
+              {/* Suggestions */}
+              {messages.length === 1 && !isLoading && (
+                <motion.div
+                  className="chatbot-suggestions"
+                  variants={{
+                    hidden: {},
+                    show: { transition: { staggerChildren: 0.1, delayChildren: 0.4 } }
+                  }}
+                  initial="hidden"
+                  animate="show"
                 >
-                  <img src="/hero.jpg" alt="VTN" className="chat-avatar" style={{ borderRadius: '50%', objectFit: 'cover' }} />
-                  <div className="chat-bubble model typing">
-                    <span>.</span><span>.</span><span>.</span>
-                  </div>
+                  {SUGGESTIONS.map((sug, i) => (
+                    <motion.button
+                      key={i}
+                      className="suggestion-btn glass-card"
+                      onClick={() => sendMessage(sug)}
+                      variants={{
+                        hidden: { opacity: 0, y: 10 },
+                        show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
+                      }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {sug}
+                    </motion.button>
+                  ))}
                 </motion.div>
               )}
 
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Suggestions */}
-            {messages.length === 1 && !isLoading && (
-              <motion.div 
-                className="chatbot-suggestions"
-                variants={{
-                  hidden: {},
-                  show: { transition: { staggerChildren: 0.1, delayChildren: 0.4 } }
-                }}
-                initial="hidden"
-                animate="show"
-              >
-                {SUGGESTIONS.map((sug, i) => (
-                  <motion.button 
-                    key={i} 
-                    className="suggestion-btn glass-card"
-                    onClick={() => sendMessage(sug)}
-                    variants={{
-                      hidden: { opacity: 0, y: 10 },
-                      show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
-                    }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    {sug}
-                  </motion.button>
-                ))}
-              </motion.div>
-            )}
-
-            <form className="chatbot-input-area" onSubmit={handleSend}>
-              <button 
-                type="button" 
-                className={`mic-btn ${isListening ? 'listening' : ''}`}
-                onClick={toggleListening}
-                disabled={isLoading}
-                title="Use microphone"
-              >
-                <FaMicrophone size={16} />
-              </button>
-              <input 
-                ref={inputRef}
-                type="text" 
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder={isListening ? "Listening..." : "Ask about my projects..."}
-                disabled={isLoading || isListening}
-              />
-              <button type="submit" disabled={!input.trim() || isLoading}>
-                <FaPaperPlane size={16} />
-              </button>
-            </form>
-          </motion.div>
+              <form className="chatbot-input-area" onSubmit={handleSend}>
+                <button
+                  type="button"
+                  className={`mic-btn ${isListening ? 'listening' : ''}`}
+                  onClick={toggleListening}
+                  disabled={isLoading}
+                  title="Use microphone"
+                >
+                  <FaMicrophone size={16} />
+                </button>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder={isListening ? "Listening..." : "Ask about my projects..."}
+                  disabled={isLoading || isListening}
+                />
+                <button type="submit" disabled={!input.trim() || isLoading}>
+                  <FaPaperPlane size={16} />
+                </button>
+              </form>
+            </motion.div>
           </>
         )}
       </AnimatePresence>

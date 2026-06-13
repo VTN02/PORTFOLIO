@@ -398,12 +398,13 @@
 @media (max-width: 768px) {
   .chatbot-toggle {
     left: 1.25rem;
-    bottom: 2.5rem; /* Increased from 1.25rem to avoid mobile nav bar clipping */
+    bottom: 2.5rem;
+    /* Increased from 1.25rem to avoid mobile nav bar clipping */
     width: 52px;
     height: 52px;
     transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   }
-  
+
   body.is-scrolling .chatbot-toggle:not(.open) {
     transform: translateX(-40px) scale(0.85);
     opacity: 0.5;

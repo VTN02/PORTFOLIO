@@ -199,7 +199,7 @@ export default function CV() {
                 </div>
                 <div className="cv__edu-meta">
                   <span className="cv__year">2023 – Present</span>
-                  <span className="cv__semester">2nd Year, 4th Semester</span>
+                  <span className="cv__semester">3rd Year, 1st Semester</span>
                 </div>
               </div>
               <motion.ul 

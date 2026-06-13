@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { FaGithub, FaArrowRight, FaGlobe, FaLock } from 'react-icons/fa6';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { FaGithub, FaArrowRight, FaGlobe, FaLock, FaChevronDown } from 'react-icons/fa6';
 import './Projects.css';
 
 const MAIN_PROJECTS = [
@@ -20,19 +20,32 @@ const MAIN_PROJECTS = [
   },
   {
     title: 'Personal Portfolio Website',
-    desc: 'A modern, responsive portfolio website showcasing projects, skills, and learning journey. Features AI-themed design with neural network animations, interactive UI elements, and smooth transitions.',
-    tech: ['React', 'Framer Motion', 'Firebase', 'Vite'],
-    image: '/images/portfolio_web.png',
+    desc: 'A modern, responsive portfolio website showcasing projects, skills, and learning journey. Features an AI chatbot powered by Groq API and an automated contact form managed by n8n workflows.',
+    tech: ['Next.js', 'React', 'Firebase', 'n8n', 'Groq API'],
+    image: '/images/portfolio_new.png',
     repo: 'https://github.com/VTN02/VTN_PORTFOLIO',
   },
+  {
+    title: 'Retail Management App',
+    desc: 'A comprehensive mobile solution for retail shops featuring user, supplier, product, order, and credit customer management. Integrates AI-powered sales and demand prediction capabilities to optimize operations.',
+    tech: ['React Native', 'Node.js', 'MongoDB Atlas', 'Railway', 'AI/ML'],
+    locked: true,
+  }
 ];
 
 const WEB_PROJECTS = [
   {
+    title: 'Tuition Management System',
+    desc: 'A comprehensive platform for tuition centers featuring a powerful admin panel. Administrators can manage student and teacher accounts, update timetables, share resources, and distribute announcement posters.',
+    tech: ['Next.js', 'React', 'Supabase'],
+    image: '/images/tution.png',
+    locked: false,
+  },
+  {
     title: 'VCollab',
     desc: 'A collaborative platform for teams. Features modern dashboard interfaces, interactive tools, and real-time synchronization.',
     tech: ['React', 'Vite', 'Tailwind CSS'],
-    image: '/images/vcollab.png',
+    image: '/images/vcollab_new.jpg',
     link: 'https://vcollab-beta.vercel.app/',
     locked: false,
   }
@@ -127,10 +140,10 @@ function ProjectCard({ project }) {
           )}
           
           {project.repo && !project.locked ? (
-            <a href={project.repo} className="project-card__link" target="_blank" rel="noopener noreferrer">
+            <div className="project-card__link" style={{ opacity: 0.6, cursor: 'not-allowed', background: 'rgba(255,255,255,0.05)' }} title="Source code is currently unavailable">
               <FaGithub size={16} />
               <span>Source Code</span>
-            </a>
+            </div>
           ) : project.locked ? (
             <div className="project-card__link" style={{ opacity: 0.6, cursor: 'not-allowed', background: 'rgba(255,255,255,0.05)' }}>
               <FaLock size={14} />
@@ -144,59 +157,113 @@ function ProjectCard({ project }) {
 }
 
 function MLCard({ project }) {
+  const cardRef = useRef(null);
+  const isInView = useInView(cardRef, { once: true, margin: "-50px" });
   const [expanded, setExpanded] = useState(false);
   const [liked, setLiked] = useState(false);
   const [count, setCount] = useState(0);
 
-  const toggle = () => {
+  useEffect(() => {
+    if (isInView) {
+      // Small delay for staggered effect
+      const timer = setTimeout(() => setExpanded(true), 200);
+      return () => clearTimeout(timer);
+    }
+  }, [isInView]);
+
+  const toggle = (e) => {
+    e.stopPropagation(); // Prevent card expansion when clicking like
     setLiked(l => !l);
     setCount(c => liked ? c - 1 : c + 1);
   };
 
   return (
     <motion.article
+      ref={cardRef}
       className="ml-card glass-card"
       variants={itemPop}
       whileHover={{ y: -4, borderColor: 'rgba(99,102,241,0.5)' }}
     >
-      <div className="ml-card__header">
-        <h4 className="ml-card__title">
+      <div 
+        className="ml-card__header" 
+        style={{ cursor: 'pointer', paddingBottom: expanded ? '0.25rem' : '0' }}
+        onClick={() => setExpanded(!expanded)}
+      >
+        <h4 className="ml-card__title" style={{ flex: 1, paddingRight: '0.5rem' }}>
           <span aria-hidden="true">{project.icon}</span> {project.title}
         </h4>
-        <button
-          className={`like-btn ${liked ? 'like-btn--active' : ''}`}
-          onClick={toggle}
-          aria-label={liked ? 'Unlike' : 'Like'}
-        >
-          <span>{liked ? '♥' : '♡'}</span>
-          <span className="like-count">{count}</span>
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <motion.div
+            animate={{ rotate: expanded ? 180 : 0 }}
+            transition={{ duration: 0.3 }}
+            style={{ color: 'var(--text-secondary)', display: 'flex' }}
+          >
+            <FaChevronDown size={14} />
+          </motion.div>
+          <button
+            className={`like-btn ${liked ? 'like-btn--active' : ''}`}
+            onClick={toggle}
+            aria-label={liked ? 'Unlike' : 'Like'}
+          >
+            <span>{liked ? '♥' : '♡'}</span>
+            <span className="like-count">{count}</span>
+          </button>
+        </div>
       </div>
-      <p
-        className={`ml-card__desc ${expanded ? 'ml-card__desc--expanded' : ''}`}
-        onClick={() => setExpanded(v => !v)}
-        title={expanded ? 'Click to collapse' : 'Click to read more'}
-      >
-        {project.desc}
-        {!expanded && <span className="desc-more"> ...more</span>}
-      </p>
-      <div className="ml-card__tech">
-        {project.tech.map(t => <span key={t} className="tech-badge">{t}</span>)}
-      </div>
-      <a
-        href="https://github.com/VTN02"
-        className="ml-card__github"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`View ${project.title} on GitHub`}
-      >
-        <FaGithub size={18} />
-      </a>
+      
+      <AnimatePresence>
+        {expanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div style={{ paddingTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              <p 
+                className="ml-card__desc" 
+                style={{ 
+                  display: 'block', 
+                  WebkitLineClamp: 'unset', 
+                  overflow: 'visible',
+                  cursor: 'default'
+                }}
+              >
+                {project.desc}
+              </p>
+              <div className="ml-card__tech">
+                {project.tech.map(t => <span key={t} className="tech-badge">{t}</span>)}
+              </div>
+              <div
+                className="ml-card__github"
+                aria-label={`View ${project.title} on GitHub`}
+                style={{ alignSelf: 'flex-end', marginTop: '-0.5rem', opacity: 0.5, cursor: 'not-allowed' }}
+                title="Source code is currently unavailable"
+              >
+                <FaGithub size={18} />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.article>
   );
 }
 
 export default function Projects() {
+  const mlRef = useRef(null);
+  const isMlInView = useInView(mlRef, { once: true, margin: "-100px" });
+  const [isMlDescOpen, setIsMlDescOpen] = useState(false);
+
+  useEffect(() => {
+    if (isMlInView) {
+      // Add a slight delay for better visual effect after scrolling
+      const timer = setTimeout(() => setIsMlDescOpen(true), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isMlInView]);
+
   return (
     <section id="projects">
       <div className="container">
@@ -254,15 +321,41 @@ export default function Projects() {
           viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="ml-section__header">
-            <h3 className="ml-section__title">
-              🔬 Machine Learning Practice Projects
-            </h3>
-            <p className="ml-section__desc">
-              Collection of prediction and classification projects built with Python, Pandas,
-              Scikit-learn, and Jupyter. These hands-on projects help me master fundamental
-              ML algorithms and data processing techniques.
-            </p>
+          <div className="ml-section__header" ref={mlRef}>
+            <div 
+              style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }} 
+              onClick={() => setIsMlDescOpen(!isMlDescOpen)}
+              title={isMlDescOpen ? 'Click to collapse' : 'Click to expand'}
+            >
+              <h3 className="ml-section__title" style={{ marginBottom: 0 }}>
+                🔬 Machine Learning Practice Projects
+              </h3>
+              <motion.div
+                animate={{ rotate: isMlDescOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+                style={{ color: 'var(--accent)', display: 'flex', fontSize: '1.2rem' }}
+              >
+                <FaChevronDown />
+              </motion.div>
+            </div>
+            
+            <AnimatePresence>
+              {isMlDescOpen && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0, y: -10 }}
+                  animate={{ height: "auto", opacity: 1, y: 0 }}
+                  exit={{ height: 0, opacity: 0, y: -10 }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  style={{ overflow: 'hidden' }}
+                >
+                  <p className="ml-section__desc" style={{ marginTop: '1rem' }}>
+                    Collection of prediction and classification projects built with Python, Pandas,
+                    Scikit-learn, and Jupyter. These hands-on projects help me master fundamental
+                    ML algorithms and data processing techniques.
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           <motion.div 

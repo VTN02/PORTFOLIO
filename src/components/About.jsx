@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import './About.css';
 
 const INFO = [
-  { icon: '🎓', label: 'Current Status', value: '2nd Year, 2nd Semester — AI Specialization' },
+  { icon: '🎓', label: 'Current Status', value: '3rd Year, 1st Semester — AI Specialization' },
   { icon: '🏛️', label: 'Education', value: 'BSc (Hons) in IT — SLIIT' },
   { icon: '🔬', label: 'Learning Focus', value: 'Machine Learning, Python, Data Science' },
   { icon: '📧', label: 'Email', value: 'vijayakumarvithusan2912@gmail.com' },
@@ -78,7 +78,7 @@ export default function About() {
                   <h4 className="timeline-title">BSc (Hons) in IT</h4>
                   <p className="timeline-school">Sri Lanka Institute of Information Technology (SLIIT)</p>
                   <p className="timeline-desc">
-                    Specialising in Artificial Intelligence. Currently in my 2nd year, 4th semester. Building a strong foundation in machine learning, algorithms, and intelligent systems development.
+                    Specialising in Artificial Intelligence. Currently in my 3rd year, 1st Semester. Building a strong foundation in machine learning, algorithms, and intelligent systems development.
                   </p>
                 </div>
               </motion.div>
@@ -104,9 +104,9 @@ export default function About() {
 
             <div className="about__stats">
               {[
-                { num: '4+', desc: 'Projects Built' },
-                { num: '7+', desc: 'ML Experiments' },
-                { num: '1', desc: 'Certification' },
+                { num: '10+', desc: 'Projects Built' },
+                { num: '2+', desc: 'ML Experiments' },
+                { num: '2', desc: 'Certification' },
               ].map(s => (
                 <div key={s.desc} className="about__stat">
                   <span className="stat-num gradient-text">{s.num}</span>
