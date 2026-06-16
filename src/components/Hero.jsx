@@ -16,7 +16,7 @@ const fadeUp = (delay = 0) => ({
 });
 
 const SOCIAL = [
-  { icon: FaGithub, href: 'https://github.com/VTN02', label: 'GitHub' },
+  // { icon: FaGithub, href: 'https://github.com/VTN02', label: 'GitHub' },
   { icon: FaLinkedin, href: 'https://www.linkedin.com/in/vithusan-vijayakumar/', label: 'LinkedIn' },
   { icon: FaEnvelope, href: 'mailto:vijayakumarvithusan2912@gmail.com', label: 'Email' },
 ];
