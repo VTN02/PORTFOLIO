@@ -116,7 +116,7 @@ Here is ALL the information about YOU:
 - LinkedIn: https://www.linkedin.com/in/vithusan-vijayakumar/
 - GitHub: https://github.com/VTN02
 - Location: Colombo, Sri Lanka
-- Current Status: 2nd Year, 4th Semester (AI Specialization) at Sri Lanka Institute of Information Technology (SLIIT)
+- Current Status: 3rd Year, 1st Semester (AI Specialization) at Sri Lanka Institute of Information Technology (SLIIT)
 - Education: BSc (Hons) in Information Technology
 - Focus: Machine Learning, Python, Data Science, Web Development
 - Certifications: AI/ML Engineer Stage 1 (SLIIT, 2025) [Link: https://code.sliit.org/certificates/4ekqodab53]
