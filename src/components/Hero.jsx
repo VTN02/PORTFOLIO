@@ -16,7 +16,7 @@ const fadeUp = (delay = 0) => ({
 });
 
 const SOCIAL = [
-  // { icon: FaGithub, href: 'https://github.com/VTN02', label: 'GitHub' },
+  { icon: FaGithub, href: 'https://github.com/VTN02', label: 'GitHub', disabled: true },
   { icon: FaLinkedin, href: 'https://www.linkedin.com/in/vithusan-vijayakumar/', label: 'LinkedIn' },
   { icon: FaEnvelope, href: 'mailto:vijayakumarvithusan2912@gmail.com', label: 'Email' },
 ];
@@ -241,20 +241,34 @@ export default function Hero() {
           </motion.div>
 
           <motion.div {...fadeUp(0.65)} className="hero__social">
-            {SOCIAL.map(({ icon: Icon, href, label }) => (
-              <motion.a
-                key={label}
-                href={href}
-                className="hero__social-icon"
-                aria-label={label}
-                target={href.startsWith('mailto') ? undefined : '_blank'}
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.15, y: -3 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Icon size={20} />
-              </motion.a>
-            ))}
+            {SOCIAL.map(({ icon: Icon, href, label, disabled }) => {
+              if (disabled) {
+                return (
+                  <div
+                    key={label}
+                    className="hero__social-icon hero__social-icon--disabled"
+                    aria-label={`${label} (Disabled)`}
+                    style={{ opacity: 0.4, cursor: 'not-allowed' }}
+                  >
+                    <Icon size={20} />
+                  </div>
+                );
+              }
+              return (
+                <motion.a
+                  key={label}
+                  href={href}
+                  className="hero__social-icon"
+                  aria-label={label}
+                  target={href.startsWith('mailto') ? undefined : '_blank'}
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.15, y: -3 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Icon size={20} />
+                </motion.a>
+              );
+            })}
           </motion.div>
         </div>
 
