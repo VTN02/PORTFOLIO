@@ -1,5 +1,6 @@
 .footer {
-  background: var(--bg-primary); /* Or glass background */
+  background: var(--bg-primary);
+  /* Or glass background */
   border-top: 1px solid var(--border);
   padding: 4rem 2rem 2rem 2rem;
   position: relative;
@@ -52,6 +53,7 @@
   transition: color 0.2s;
   text-decoration: none;
 }
+
 .footer__email:hover {
   color: var(--accent);
 }
@@ -84,6 +86,7 @@
   transition: color 0.2s, transform 0.2s;
   display: inline-block;
 }
+
 .footer__nav-link:hover {
   color: var(--accent);
   transform: translateX(4px);
@@ -132,7 +135,7 @@
 .footer__social:hover {
   color: var(--accent);
   border-color: var(--border-accent);
-  background: rgba(99,102,241,0.1);
+  background: rgba(99, 102, 241, 0.1);
 }
 
 @media (max-width: 768px) {
@@ -140,6 +143,7 @@
     flex-direction: column;
     gap: 2rem;
   }
+
   .footer__bottom {
     flex-direction: column;
     text-align: center;

@@ -207,11 +207,13 @@
   border: 1px solid transparent;
   pointer-events: none;
 }
+
 .portrait-ring--1 {
   inset: -8%;
-  border-color: rgba(99,102,241,0.2);
+  border-color: rgba(99, 102, 241, 0.2);
   animation: spin-slow 10s linear infinite;
 }
+
 .portrait-ring--1::after {
   content: '';
   position: absolute;
@@ -219,16 +221,17 @@
   left: calc(50% - 3px);
   width: 6px;
   height: 6px;
-  background: rgba(99,102,241,1);
+  background: rgba(99, 102, 241, 1);
   border-radius: 50%;
-  box-shadow: 0 0 10px rgba(99,102,241,0.8);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.8);
 }
 
 .portrait-ring--2 {
   inset: -15%;
-  border-color: rgba(139,92,246,0.15);
+  border-color: rgba(139, 92, 246, 0.15);
   animation: spin-slow 15s linear infinite reverse;
 }
+
 .portrait-ring--2::after {
   content: '';
   position: absolute;
@@ -236,9 +239,9 @@
   left: calc(50% - 3px);
   width: 6px;
   height: 6px;
-  background: rgba(139,92,246,1);
+  background: rgba(139, 92, 246, 1);
   border-radius: 50%;
-  box-shadow: 0 0 10px rgba(139,92,246,0.8);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.8);
 }
 
 @keyframes spin-slow {

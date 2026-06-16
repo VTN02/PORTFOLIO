@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { Analytics } from '@vercel/analytics/react';
 import './index.css';
-import Loader            from './components/Loader';
+import Loader from './components/Loader';
 import ParticleBackground from './components/ParticleBackground';
-import Navbar            from './components/Navbar';
-import Hero              from './components/Hero';
-import About             from './components/About';
-import Projects          from './components/Projects';
-import CV                from './components/CV';
-import Contact           from './components/Contact';
-import Footer            from './components/Footer';
-import WhatsAppFloat     from './components/WhatsAppFloat';
-import Chatbot           from './components/Chatbot';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import About from './components/About';
+import Projects from './components/Projects';
+import CV from './components/CV';
+import Contact from './components/Contact';
+import Footer from './components/Footer';
+import WhatsAppFloat from './components/WhatsAppFloat';
+import Chatbot from './components/Chatbot';
 
-import MobilePortrait       from './components/MobilePortrait';
+import MobilePortrait from './components/MobilePortrait';
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -47,26 +48,27 @@ export default function App() {
 
       {!loading && (
         <>
-      {/* Layered backgrounds */}
-      <div className="bg-grid" aria-hidden="true" />
-      <ParticleBackground />
+          {/* Layered backgrounds */}
+          <div className="bg-grid" aria-hidden="true" />
+          <ParticleBackground />
 
-      {/* Navigation */}
-      <Navbar />
+          {/* Navigation */}
+          <Navbar />
 
-      {/* Main content */}
-      <main>
-        <Hero />
-        <MobilePortrait />
-        <About />
-        <Projects />
-        <CV />
-        <Contact />
-      </main>
+          {/* Main content */}
+          <main>
+            <Hero />
+            <MobilePortrait />
+            <About />
+            <Projects />
+            <CV />
+            <Contact />
+          </main>
 
           <Footer />
           <WhatsAppFloat />
           <Chatbot />
+          <Analytics />
         </>
       )}
     </>
